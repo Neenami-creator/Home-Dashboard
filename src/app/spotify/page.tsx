@@ -5,6 +5,7 @@ import { PanelShell } from "@/components/PanelShell";
 import { ConnectSpotify } from "@/components/spotify/ConnectSpotify";
 import { NowPlayingCard } from "@/components/spotify/NowPlayingCard";
 import { DevicePicker } from "@/components/spotify/DevicePicker";
+import { SonosGroupingSection } from "@/components/spotify/SonosGroupingSection";
 import { StaleBadge } from "@/components/ui/StaleBadge";
 import { disconnect, getValidAccessToken } from "@/lib/spotify/auth";
 import { loadClientId } from "@/lib/spotify/config";
@@ -179,6 +180,8 @@ export default function SpotifyPage() {
           onSelect={(deviceId) => withToken((token) => transferPlayback(token, deviceId, true))}
         />
       </div>
+
+      <SonosGroupingSection />
 
       <button
         type="button"

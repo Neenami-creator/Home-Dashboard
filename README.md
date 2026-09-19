@@ -122,6 +122,28 @@ Spotify's Web API has no push mechanism for playback state, so this panel polls 
 adaptively: every 5 seconds while something's playing, backing off to every 25 seconds when
 idle, and immediately after any button you tap here regardless of that timer.
 
+### Sonos multi-room grouping
+
+A genuinely separate integration from Spotify — Spotify's Web API has no concept of speaker
+grouping at all; combining speakers to play in sync is entirely a Sonos feature, reachable
+only through Sonos's own **Control API**. This is the least certain piece of this whole app:
+**UNVERIFIED FROM THIS BUILD ENVIRONMENT** — the token endpoint, the households/groups
+endpoints, and the confidential-client OAuth exchange in `src/lib/sonos/server.ts` are built
+from documentation knowledge with no live Sonos developer account to check them against, and
+Sonos's Control API has less community-tool precedent to lean on than Hue's or BOM's
+undocumented-but-well-trodden endpoints. Confirm against
+[developer.sonos.com](https://developer.sonos.com) before relying on it, and expect to patch
+one or two endpoint paths in `src/lib/sonos/client.ts` or `server.ts` if they've drifted.
+
+Setup, once you have a Sonos developer account:
+
+1. Create a Control integration and note the **Client ID** and **Client Secret**.
+2. Add `<your-deployed-url>/api/sonos/callback` as the redirect URI.
+3. Set `NEXT_PUBLIC_SONOS_CLIENT_ID` and `SONOS_CLIENT_SECRET`. Unlike Spotify, Sonos's OAuth
+   needs a real secret — kept server-only, used only by the two routes under `/api/sonos`.
+4. In the Spotify panel, **Connect Sonos** appears once the Client ID is set. Select two or
+   more speakers to group them, or adjust a group's volume with its slider.
+
 ## Weather panel setup
 
 BOM has no documented, key-based API. The panel proxies (server-side, to dodge CORS) BOM's
@@ -208,6 +230,18 @@ precaution for a display that's mounted permanently, and a reason to glance at i
 first place. If any photos have been uploaded (Settings → Screensaver photos), it becomes a
 slow-rotating digital photo frame with the clock overlaid instead of a bare clock, crossfading
 every 15 seconds. Any tap, click or key press wakes it back to exactly where it was.
+
+## Offline resilience
+
+A `public/sw.js` service worker (registered by `ServiceWorkerRegistration`) caches this
+app's own pages and static assets so a total WiFi outage shows this app's own UI — which, per
+the stale-state fallback above, still has something to say — instead of the browser's blank
+offline error page. Deliberately hands-off about it: it never touches API routes or
+cross-origin requests (the Hue bridge, BOM, Spotify, Supabase all always hit the network
+live), and it doesn't precache a build-time asset manifest (Next's chunk hashes change every
+deploy, which would make a baked-in list go stale) — instead it's stale-while-revalidate for
+static assets and network-first-with-cache-fallback for page navigations, both populated
+naturally as the dashboard is used.
 
 ## Local development
 
