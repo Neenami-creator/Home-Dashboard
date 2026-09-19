@@ -11,9 +11,10 @@ Four panels:
   playlist on Sonos is a known-flaky stretch feature, not yet built).
 - **BOM Weather** — current conditions and forecast. Built, but the Adelaide station/forecast
   codes are unverified — see below before relying on it.
-- **Recipe Library** — searchable recipe cards. Coming last.
+- **Recipe Library** — searchable recipe cards. Ready, but requires you to run a one-off SQL
+  migration against your Supabase project first — see below.
 
-Functional-first; a dedicated visual design pass follows once all four panels work.
+All four panels are built. Functional-first; a dedicated visual design pass follows next.
 
 ## Architecture
 
@@ -88,11 +89,37 @@ API, the panel most likely to need a small fix if BOM changes its format — the
 `src/app/api/weather/route.ts` is written defensively (falls back to "unavailable" rather
 than crashing) for exactly that reason.
 
+## Recipe library setup
+
+Reuses the existing Wardrobe Edit Supabase project (org Nina, project `the-wardrobe-edit`,
+ref `ezvmsyneahnprupozorz`) rather than a new project, since that account is already at its
+2-project free-tier cap. **This build environment has no credentials for that project**, so
+the migration below hasn't been applied — you'll need to run it yourself.
+
+1. Open that project's SQL Editor and run the whole of `supabase/migrations/0001_recipes.sql`.
+   It creates a `recipes` table and a `recipe-photos` storage bucket, both fully separate
+   from Wardrobe Edit's existing tables, its `profiles` table, and its per-user auth. RLS is
+   public-read / no public write — there's no login concept for a shared household resource.
+2. From that project's **Project Settings → API**, copy the **Project URL**, the
+   **anon / publishable key**, and the **service role key** (this one is secret — server-only,
+   never `NEXT_PUBLIC_`) into your environment.
+3. Choose a passcode for the upload page and set it as `RECIPE_UPLOAD_PASSCODE`.
+4. Set all four in `.env.local` for development, and as Vercel environment variables (all
+   environments) for production.
+
+Once configured: a searchable gallery (title, tags, ingredients all match), a recipe detail
+page with a stats row (yield/prep/rise/cook/oven), two-column ingredients/method, numbered
+steps, a note callout, and a servings scaler that adjusts ingredient amounts. **+ Add
+recipe** opens a passcode-gated upload form; photos are resized to at most 1600px and
+re-encoded as JPEG in the browser before upload, to stay within the shared 1GB storage quota.
+New recipes appear immediately — no redeploy needed, since the upload route writes straight
+to Supabase.
+
 ## Local development
 
 ```bash
 npm install
-cp .env.example .env.local     # optional: pre-fill Hue bridge / Spotify Client ID
+cp .env.example .env.local     # fill in Hue / Spotify / Supabase values as you set each up
 npm run dev
 ```
 

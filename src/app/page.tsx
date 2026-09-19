@@ -6,28 +6,24 @@ const PANELS = [
     name: "Hue Lights",
     description: "Room-by-room light control",
     accent: "#f5c94a",
-    status: "ready" as const,
   },
   {
     href: "/spotify",
     name: "Spotify",
     description: "Sonos playback control",
     accent: "#1ed760",
-    status: "ready" as const,
   },
   {
     href: "/weather",
     name: "Weather",
     description: "BOM current conditions & forecast",
     accent: "#4ea8ff",
-    status: "ready" as const,
   },
   {
     href: "/recipes",
     name: "Recipes",
     description: "The recipe library",
     accent: "#ff8a5c",
-    status: "coming-soon" as const,
   },
 ];
 
@@ -49,11 +45,6 @@ export default function Home() {
             />
             <span className="text-2xl font-medium">{panel.name}</span>
             <span className="mt-1 text-sm text-white/50">{panel.description}</span>
-            {panel.status === "coming-soon" && (
-              <span className="absolute right-5 top-5 rounded-full border border-white/15 px-3 py-1 text-xs text-white/50">
-                Coming soon
-              </span>
-            )}
           </Link>
         ))}
       </div>
