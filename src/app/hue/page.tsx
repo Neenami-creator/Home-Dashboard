@@ -6,15 +6,20 @@ import { BridgeSettings } from "@/components/hue/BridgeSettings";
 import { RoomTile } from "@/components/hue/RoomTile";
 import { loadBridgeConfig, saveBridgeConfig, clearBridgeConfig } from "@/lib/hue/config";
 import { fetchRoomStates, setGroupedLightState, HueBridgeError } from "@/lib/hue/client";
+import { subscribeToHueEvents } from "@/lib/hue/eventstream";
 import type { BridgeConfig, HueRoomState } from "@/lib/hue/types";
 
-const POLL_INTERVAL_MS = 15_000;
+// The event stream (see below) delivers changes the instant they happen -
+// from this panel, the Hue app, a physical switch, or a schedule - so this
+// is only a safety net in case the stream silently drops.
+const SAFETY_POLL_INTERVAL_MS = 60_000;
 
 export default function HuePage() {
   const [config, setConfig] = useState<BridgeConfig | null | undefined>(undefined);
   const [rooms, setRooms] = useState<HueRoomState[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busyRoomId, setBusyRoomId] = useState<string | null>(null);
+  const [live, setLive] = useState(false);
 
   useEffect(() => {
     // Reads localStorage, which isn't available during server rendering.
@@ -34,12 +39,34 @@ export default function HuePage() {
 
   useEffect(() => {
     if (!config) return;
-    // Fetches from the bridge on mount and on a polling interval.
+    // Fetches from the bridge on mount and on a low-frequency safety-net poll.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     refresh(config);
-    const interval = setInterval(() => refresh(config), POLL_INTERVAL_MS);
+    const interval = setInterval(() => refresh(config), SAFETY_POLL_INTERVAL_MS);
     return () => clearInterval(interval);
   }, [config, refresh]);
+
+  useEffect(() => {
+    if (!config) return;
+    const unsubscribe = subscribeToHueEvents(
+      config,
+      (updates) => {
+        setRooms((prev) =>
+          prev.map((room) => {
+            const update = updates.find((u) => u.groupedLightId === room.groupedLightId);
+            if (!update) return room;
+            return {
+              ...room,
+              on: update.on ?? room.on,
+              brightness: update.brightness ?? room.brightness,
+            };
+          })
+        );
+      },
+      (status) => setLive(status === "connected")
+    );
+    return unsubscribe;
+  }, [config]);
 
   async function applyUpdate(
     room: HueRoomState,
@@ -109,16 +136,25 @@ export default function HuePage() {
         ))}
       </div>
 
-      <button
-        type="button"
-        onClick={() => {
-          clearBridgeConfig();
-          setConfig(null);
-        }}
-        className="mt-8 text-xs text-[var(--text-tertiary)] underline underline-offset-2"
-      >
-        Forget this bridge
-      </button>
+      <div className="mt-8 flex items-center justify-between">
+        <span className="flex items-center gap-1.5 text-xs text-[var(--text-tertiary)]">
+          <span
+            className="h-1.5 w-1.5 rounded-full"
+            style={{ backgroundColor: live ? "var(--accent-hue)" : "var(--border-strong)" }}
+          />
+          {live ? "Live" : "Reconnecting…"}
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            clearBridgeConfig();
+            setConfig(null);
+          }}
+          className="text-xs text-[var(--text-tertiary)] underline underline-offset-2"
+        >
+          Forget this bridge
+        </button>
+      </div>
     </PanelShell>
   );
 }

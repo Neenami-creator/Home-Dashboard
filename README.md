@@ -18,6 +18,12 @@ All four panels are built, and share a dark glass design system: warm accent col
 panel, a live clock, and a persistent panel-switcher in the header for quick navigation
 without returning to the home screen — useful on a display that's mounted permanently.
 
+After 5 minutes without a touch, the whole dashboard dims to a full-screen clock (plus
+current conditions for whichever city was last picked in the Weather panel) rather than
+sitting on whatever panel was last open — this is a display that's on a wall permanently, so
+that's both an OLED/LCD burn-in precaution and a reason to glance at it in the first place.
+Any tap, click or key press wakes it back to exactly where it was.
+
 ## Architecture
 
 The app is hosted on Vercel. Spotify and BOM weather work from anywhere. Hue is the
@@ -42,8 +48,11 @@ it lives anyway).
      panel connects automatically.
 
 The panel reads rooms and their grouped lights via the bridge's CLIP v2 API
-(`/clip/v2/resource/room`, `/clip/v2/resource/grouped_light`) and polls every 15 seconds so
-state stays in sync if lights are also controlled from the Hue app.
+(`/clip/v2/resource/room`, `/clip/v2/resource/grouped_light`), then subscribes to the
+bridge's event stream (`/eventstream/clip/v2`) so tiles update the instant a light changes —
+from this panel, the Hue app, a physical switch, or a schedule — rather than waiting for a
+poll. A 60-second poll runs alongside it purely as a safety net in case the stream drops; the
+small dot next to "Forget this bridge" shows whether the stream is currently live.
 
 ## Spotify panel setup
 
@@ -63,6 +72,10 @@ Once connected: now-playing card with play/pause/skip/volume, and a device picke
 between Sonos speakers. Transport controls on whatever's already playing are reliable;
 starting a specific playlist or album on a Sonos device from scratch is a known Sonos/Spotify
 limitation and isn't built here yet.
+
+Spotify's Web API has no push mechanism for playback state, so this panel polls — but
+adaptively: every 5 seconds while something's playing, backing off to every 25 seconds when
+idle, and immediately after any button you tap here regardless of that timer.
 
 ## Weather panel setup
 

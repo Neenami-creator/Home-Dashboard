@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PanelShell } from "@/components/PanelShell";
 import { ConnectSpotify } from "@/components/spotify/ConnectSpotify";
 import { NowPlayingCard } from "@/components/spotify/NowPlayingCard";
@@ -20,7 +20,12 @@ import {
 } from "@/lib/spotify/client";
 import type { SpotifyDevice, SpotifyPlaybackState } from "@/lib/spotify/types";
 
-const POLL_INTERVAL_MS = 5_000;
+// Spotify's Web API has no push mechanism for playback state, so this still
+// polls - but there's no reason to hit it every 5s when nothing is playing.
+// Polling speeds up the moment something starts, and any user-initiated
+// control (see withToken below) refreshes immediately regardless of timing.
+const ACTIVE_POLL_MS = 5_000;
+const IDLE_POLL_MS = 25_000;
 
 export default function SpotifyPage() {
   const [clientId, setClientId] = useState<string | null | undefined>(undefined);
@@ -29,6 +34,11 @@ export default function SpotifyPage() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [connected, setConnected] = useState(false);
+
+  const playbackRef = useRef<SpotifyPlaybackState | null>(null);
+  useEffect(() => {
+    playbackRef.current = playback;
+  }, [playback]);
 
   useEffect(() => {
     // Reads localStorage, which isn't available during server rendering.
@@ -63,11 +73,21 @@ export default function SpotifyPage() {
 
   useEffect(() => {
     if (clientId === undefined) return;
-    // Polls Spotify's now-playing state on mount and on an interval.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    refresh();
-    const interval = setInterval(refresh, POLL_INTERVAL_MS);
-    return () => clearInterval(interval);
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    async function tick() {
+      await refresh();
+      if (cancelled) return;
+      const delay = playbackRef.current?.is_playing ? ACTIVE_POLL_MS : IDLE_POLL_MS;
+      timeoutId = setTimeout(tick, delay);
+    }
+
+    tick();
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
   }, [clientId, refresh]);
 
   async function withToken(action: (accessToken: string) => Promise<void>) {
