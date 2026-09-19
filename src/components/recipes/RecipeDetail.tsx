@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Check, Minus, Plus, StickyNote } from "lucide-react";
+import { Check, Minus, Plus, ShoppingCart, StickyNote } from "lucide-react";
 import type { Recipe } from "@/lib/recipes/types";
 import { recipePhotoUrl } from "@/lib/supabase/client";
 import { scaleIngredients } from "@/lib/recipes/scale";
+import { addRecipeIngredientsToShoppingList } from "@/lib/shopping/queries";
 import { IconButton } from "@/components/ui/IconButton";
 import { useWakeLock } from "@/lib/useWakeLock";
 
@@ -20,7 +21,14 @@ const STATS: { key: keyof Recipe; label: string }[] = [
 export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const [servings, setServings] = useState(recipe.servings);
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
+  const [addedToList, setAddedToList] = useState(false);
   const scaledIngredients = scaleIngredients(recipe.ingredients, recipe.servings, servings);
+
+  async function handleAddToShoppingList() {
+    await addRecipeIngredientsToShoppingList(scaledIngredients, recipe.id);
+    setAddedToList(true);
+    setTimeout(() => setAddedToList(false), 2000);
+  }
 
   // A recipe is usually open because someone's mid-cook with messy hands -
   // keep the screen from dimming out from under them.
@@ -84,6 +92,25 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
               </IconButton>
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={handleAddToShoppingList}
+            disabled={addedToList}
+            className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--border)] py-2 text-sm text-[var(--text-secondary)] transition hover:border-[var(--border-strong)] hover:bg-[var(--surface-hover)] disabled:opacity-60"
+          >
+            {addedToList ? (
+              <>
+                <Check size={14} className="text-[var(--accent-recipes)]" />
+                Added
+              </>
+            ) : (
+              <>
+                <ShoppingCart size={14} />
+                Add to shopping list
+              </>
+            )}
+          </button>
           <ul className="space-y-1">
             {scaledIngredients.map((ing, i) => {
               const checked = checkedIngredients.has(i);

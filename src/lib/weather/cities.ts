@@ -17,6 +17,7 @@ export const BUILT_IN_CITIES: WeatherCity[] = [
     obsStation: "94648",
     fcProduct: "IDS10044",
     fcAac: "SA_PW001",
+    radarId: "IDR643",
     builtIn: true,
   },
 ];

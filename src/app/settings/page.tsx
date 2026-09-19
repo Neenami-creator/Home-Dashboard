@@ -6,6 +6,7 @@ import { HueSettingsSection } from "@/components/settings/HueSettingsSection";
 import { SpotifySettingsSection } from "@/components/settings/SpotifySettingsSection";
 import { RoutinesSettingsSection } from "@/components/settings/RoutinesSettingsSection";
 import { RecipesSettingsSection } from "@/components/settings/RecipesSettingsSection";
+import { ScreensaverSettingsSection } from "@/components/settings/ScreensaverSettingsSection";
 
 export default function SettingsPage() {
   const [mounted, setMounted] = useState(false);
@@ -28,6 +29,7 @@ export default function SettingsPage() {
               <RoutinesSettingsSection />
             </div>
             <RecipesSettingsSection />
+            <ScreensaverSettingsSection />
           </>
         )}
       </div>

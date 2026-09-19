@@ -24,7 +24,20 @@ export function scaleAmount(amount: string, ratio: number): string {
   return amount;
 }
 
-function formatNumber(value: number): string {
+// Exposed for the shopping list, which needs the raw numeric value (rather
+// than a re-scaled amount string) to merge quantities across recipes.
+export function parseAmount(amount: string): number | null {
+  const trimmed = amount.trim();
+  const fractionMatch = trimmed.match(/^(\d+)?\s*(\d+)\/(\d+)$/);
+  if (fractionMatch) {
+    const whole = fractionMatch[1] ? parseInt(fractionMatch[1], 10) : 0;
+    return whole + parseInt(fractionMatch[2], 10) / parseInt(fractionMatch[3], 10);
+  }
+  const numberMatch = trimmed.match(/^\d+(\.\d+)?$/);
+  return numberMatch ? parseFloat(trimmed) : null;
+}
+
+export function formatNumber(value: number): string {
   const rounded = Math.round(value * 100) / 100;
   return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
 }

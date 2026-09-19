@@ -15,6 +15,7 @@ export function AddCityForm({
   const [obsStation, setObsStation] = useState("");
   const [fcProduct, setFcProduct] = useState("");
   const [fcAac, setFcAac] = useState("");
+  const [radarId, setRadarId] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,6 +29,7 @@ export function AddCityForm({
       obsStation: obsStation.trim(),
       fcProduct: fcProduct.trim(),
       fcAac: fcAac.trim(),
+      radarId: radarId.trim() || undefined,
     });
   }
 
@@ -104,6 +106,16 @@ export function AddCityForm({
           />
         </label>
       </div>
+
+      <label className="mt-3 block text-sm text-[var(--text-secondary)]">
+        Radar ID (optional)
+        <input
+          value={radarId}
+          onChange={(e) => setRadarId(e.target.value)}
+          placeholder="IDR643"
+          className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+        />
+      </label>
 
       <div className="mt-5 flex gap-3">
         <button

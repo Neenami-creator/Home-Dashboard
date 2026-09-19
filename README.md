@@ -36,11 +36,8 @@ Recipes open in a light cooking mode: tap an ingredient to check it off while yo
 the screen is kept awake (Screen Wake Lock API, where supported) for as long as a recipe is
 open, since flour-covered hands aren't available to keep tapping the screen awake.
 
-After 5 minutes without a touch, the whole dashboard dims to a full-screen clock (plus
-current conditions for whichever city was last picked in the Weather panel) rather than
-sitting on whatever panel was last open — this is a display that's on a wall permanently, so
-that's both an OLED/LCD burn-in precaution and a reason to glance at it in the first place.
-Any tap, click or key press wakes it back to exactly where it was.
+After 5 minutes idle, the dashboard becomes a clock (and photo frame, if configured) — see
+**Idle screensaver** below.
 
 ## Architecture
 
@@ -152,6 +149,19 @@ API, the panel most likely to need a small fix if BOM changes its format — the
 `src/app/api/weather/route.ts` is written defensively (falls back to "unavailable" rather
 than crashing) for exactly that reason.
 
+### Rain radar
+
+Below the forecast, a looping rain radar image for whichever city is selected — if it has a
+`radarId` (Adelaide ships with `IDR643`, also **unverified from this build environment**).
+BOM has no radar API at all, so `src/app/api/weather/radar/route.ts` scrapes the current
+frame timestamps out of the public loop page's embedded JavaScript
+(`bom.gov.au/products/<radarId>.loop.shtml`) — this is a step more fragile than the JSON
+mirrors the rest of the panel uses, since it depends on that page's HTML structure rather
+than a stable file naming convention. It degrades to showing the static map with no rain
+overlay (and a small warning) if the scrape finds nothing, rather than breaking. Add a radar
+ID for any other city via the **+ Add city** form's optional field; find one by opening that
+town's radar loop page on bom.gov.au and reading the ID out of the URL.
+
 ## Recipe library setup
 
 Reuses the existing Wardrobe Edit Supabase project (org Nina, project `the-wardrobe-edit`,
@@ -177,6 +187,27 @@ recipe** opens a passcode-gated upload form; photos are resized to at most 1600p
 re-encoded as JPEG in the browser before upload, to stay within the shared 1GB storage quota.
 New recipes appear immediately — no redeploy needed, since the upload route writes straight
 to Supabase.
+
+Run `supabase/migrations/0002_shopping_list.sql` too, for the **shopping list** (reachable
+from the cart icon in the Recipes panel). Unlike `recipes`, this table is public read *and
+write* — no passcode — since it's meant to be checked off directly from the dashboard with
+nothing but the anon key. Each recipe's "Add to shopping list" button merges its ingredients
+into any existing unchecked item with the same name and unit when both amounts are plain
+numbers (so "2 eggs" + "3 eggs" becomes one "5 eggs" row); anything else is added as its own
+row rather than risk merging the wrong things.
+
+Run `supabase/migrations/0003_screensaver_photos.sql` for the **screensaver photos** bucket
+used by the idle screensaver (see below) — upload photos from Settings, gated by the same
+`RECIPE_UPLOAD_PASSCODE`.
+
+## Idle screensaver
+
+After 5 minutes without a touch, the dashboard dims to a full-screen clock and current
+conditions rather than sitting on whatever panel was last open — an OLED/LCD burn-in
+precaution for a display that's mounted permanently, and a reason to glance at it in the
+first place. If any photos have been uploaded (Settings → Screensaver photos), it becomes a
+slow-rotating digital photo frame with the clock overlaid instead of a bare clock, crossfading
+every 15 seconds. Any tap, click or key press wakes it back to exactly where it was.
 
 ## Local development
 

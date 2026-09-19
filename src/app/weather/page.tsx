@@ -6,6 +6,7 @@ import { CitySelector } from "@/components/weather/CitySelector";
 import { AddCityForm } from "@/components/weather/AddCityForm";
 import { ConditionsCard } from "@/components/weather/ConditionsCard";
 import { ForecastStrip } from "@/components/weather/ForecastStrip";
+import { RadarLoop } from "@/components/weather/RadarLoop";
 import { StaleBadge } from "@/components/ui/StaleBadge";
 import {
   loadCities,
@@ -126,6 +127,12 @@ export default function WeatherPage() {
       )}
 
       {weather && <ForecastStrip forecast={weather.forecast} />}
+
+      {selectedCity?.radarId && (
+        <div className="mt-8">
+          <RadarLoop radarId={selectedCity.radarId} />
+        </div>
+      )}
     </PanelShell>
   );
 }

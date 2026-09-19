@@ -8,6 +8,9 @@ export type WeatherCity = {
   obsStation: string;
   fcProduct: string;
   fcAac: string;
+  // BOM radar product ID (e.g. "IDR643") covering this city, if known.
+  // Optional: the radar strip is simply hidden for a city without one.
+  radarId?: string;
   builtIn?: boolean;
 };
 
