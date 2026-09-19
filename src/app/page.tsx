@@ -13,7 +13,7 @@ const PANELS = [
     name: "Spotify",
     description: "Sonos playback control",
     accent: "#1ed760",
-    status: "coming-soon" as const,
+    status: "ready" as const,
   },
   {
     href: "/weather",

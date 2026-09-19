@@ -7,7 +7,8 @@ TypeScript, Tailwind), hosted on Vercel.
 Four panels:
 
 - **Hue** — room-by-room light control. Ready.
-- **Spotify** — Sonos playback control. Coming next.
+- **Spotify** — Sonos playback control. Ready (transport controls; starting a specific
+  playlist on Sonos is a known-flaky stretch feature, not yet built).
 - **BOM Weather** — current conditions and forecast. Coming next.
 - **Recipe Library** — searchable recipe cards. Coming last.
 
@@ -40,16 +41,36 @@ The panel reads rooms and their grouped lights via the bridge's CLIP v2 API
 (`/clip/v2/resource/room`, `/clip/v2/resource/grouped_light`) and polls every 15 seconds so
 state stays in sync if lights are also controlled from the Hue app.
 
+## Spotify panel setup
+
+1. Create a free app at [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard)
+   and note the **Client ID** — there's no client secret to manage, since the panel uses the
+   PKCE auth flow entirely from the browser.
+2. In the app's settings, add these **Redirect URIs**:
+   - `<your-deployed-url>/spotify/callback`
+   - `http://127.0.0.1:3000/spotify/callback` (for local development)
+3. In the Sonos app, confirm Spotify is added as a linked music service (not just cast to via
+   another app) — that's what makes a Sonos speaker show up as a Spotify Connect device.
+4. Open the Spotify panel and either paste the Client ID into the one-time connect form, or
+   set `NEXT_PUBLIC_SPOTIFY_CLIENT_ID` at deploy time so the form is skipped.
+5. Tap **Connect with Spotify** and log in. Requires Spotify Premium for playback control.
+
+Once connected: now-playing card with play/pause/skip/volume, and a device picker to switch
+between Sonos speakers. Transport controls on whatever's already playing are reliable;
+starting a specific playlist or album on a Sonos device from scratch is a known Sonos/Spotify
+limitation and isn't built here yet.
+
 ## Local development
 
 ```bash
 npm install
-cp .env.example .env.local     # optional: pre-fill Hue bridge details
+cp .env.example .env.local     # optional: pre-fill Hue bridge / Spotify Client ID
 npm run dev
 ```
 
-Open http://localhost:3000. Since the Hue bridge is LAN-only, the Hue panel only works when
-this device is on the same network as the bridge.
+Open http://127.0.0.1:3000 (not `localhost`, since a Spotify redirect URI must match
+exactly). Since the Hue bridge is LAN-only, the Hue panel only works when this device is on
+the same network as the bridge.
 
 ## Deploy to Vercel
 
