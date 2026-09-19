@@ -9,7 +9,8 @@ Four panels:
 - **Hue** — room-by-room light control. Ready.
 - **Spotify** — Sonos playback control. Ready (transport controls; starting a specific
   playlist on Sonos is a known-flaky stretch feature, not yet built).
-- **BOM Weather** — current conditions and forecast. Coming next.
+- **BOM Weather** — current conditions and forecast. Built, but the Adelaide station/forecast
+  codes are unverified — see below before relying on it.
 - **Recipe Library** — searchable recipe cards. Coming last.
 
 Functional-first; a dedicated visual design pass follows once all four panels work.
@@ -59,6 +60,33 @@ Once connected: now-playing card with play/pause/skip/volume, and a device picke
 between Sonos speakers. Transport controls on whatever's already playing are reliable;
 starting a specific playlist or album on a Sonos device from scratch is a known Sonos/Spotify
 limitation and isn't built here yet.
+
+## Weather panel setup
+
+BOM has no documented, key-based API. The panel proxies (server-side, to dodge CORS) BOM's
+public JSON mirrors of its FTP product files — the same undocumented endpoints existing
+community weather tools already parse:
+
+- Observations: `https://www.bom.gov.au/fwo/<product>/<product>.<station>.json`
+- Forecast: `https://www.bom.gov.au/fwo/<product>/<product>.<AAC>.json`
+
+Adelaide ships built in (product `IDS60901` / station `94648` for observations, product
+`IDS10044` / area code `SA_PW001` for forecast) — **these codes could not be verified from
+the build environment (no network route to bom.gov.au there) and should be checked against
+real output once deployed.** If a city shows no data, open
+`https://www.bom.gov.au/fwo/<product>/<product>.<code>.json` directly in a browser to check
+the codes still resolve, and adjust `BUILT_IN_CITIES` in `src/lib/weather/cities.ts` if not.
+
+Roxby Downs, Whyalla, or any other town: use the **+ Add city** button in the panel. BOM
+doesn't publish a lookup for these codes, so find them by browsing to the town's page on
+[bom.gov.au/places](http://www.bom.gov.au/places/), opening the browser's network tab, and
+copying the product/station/AAC codes out of the `.json` request URLs for its observation and
+forecast pages.
+
+This is, by nature of being built on undocumented public data files rather than a supported
+API, the panel most likely to need a small fix if BOM changes its format — the parsing in
+`src/app/api/weather/route.ts` is written defensively (falls back to "unavailable" rather
+than crashing) for exactly that reason.
 
 ## Local development
 

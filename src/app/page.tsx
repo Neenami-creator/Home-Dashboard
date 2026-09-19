@@ -20,7 +20,7 @@ const PANELS = [
     name: "Weather",
     description: "BOM current conditions & forecast",
     accent: "#4ea8ff",
-    status: "coming-soon" as const,
+    status: "ready" as const,
   },
   {
     href: "/recipes",
