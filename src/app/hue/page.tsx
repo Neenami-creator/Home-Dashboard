@@ -1,18 +1,31 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { PanelShell } from "@/components/PanelShell";
 import { BridgeSettings } from "@/components/hue/BridgeSettings";
 import { RoomTile } from "@/components/hue/RoomTile";
+import { StaleBadge } from "@/components/ui/StaleBadge";
 import { loadBridgeConfig, saveBridgeConfig, clearBridgeConfig } from "@/lib/hue/config";
 import { fetchRoomStates, setGroupedLightState, HueBridgeError } from "@/lib/hue/client";
 import { subscribeToHueEvents } from "@/lib/hue/eventstream";
+import { loadCache, saveCache } from "@/lib/cache";
 import type { BridgeConfig, HueRoomState } from "@/lib/hue/types";
 
 // The event stream (see below) delivers changes the instant they happen -
 // from this panel, the Hue app, a physical switch, or a schedule - so this
 // is only a safety net in case the stream silently drops.
 const SAFETY_POLL_INTERVAL_MS = 60_000;
+const CACHE_KEY = "hue-rooms";
+
+const gridVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.05 } },
+};
+const tileVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0 },
+};
 
 export default function HuePage() {
   const [config, setConfig] = useState<BridgeConfig | null | undefined>(undefined);
@@ -20,6 +33,7 @@ export default function HuePage() {
   const [error, setError] = useState<string | null>(null);
   const [busyRoomId, setBusyRoomId] = useState<string | null>(null);
   const [live, setLive] = useState(false);
+  const [staleSince, setStaleSince] = useState<number | null>(null);
 
   useEffect(() => {
     // Reads localStorage, which isn't available during server rendering.
@@ -32,8 +46,18 @@ export default function HuePage() {
       const states = await fetchRoomStates(cfg);
       setRooms(states);
       setError(null);
+      setStaleSince(null);
+      saveCache(CACHE_KEY, states);
     } catch (err) {
       setError(err instanceof HueBridgeError ? err.message : "Couldn't load rooms.");
+      // Cold load with no live data yet (e.g. page refreshed mid-outage) -
+      // fall back to whatever we last knew rather than showing nothing.
+      setRooms((prev) => {
+        if (prev.length > 0) return prev;
+        const cached = loadCache<HueRoomState[]>(CACHE_KEY);
+        if (cached) setStaleSince(cached.savedAt);
+        return cached?.data ?? prev;
+      });
     }
   }, []);
 
@@ -113,6 +137,12 @@ export default function HuePage() {
 
   return (
     <PanelShell title="Hue Lights" accent="var(--accent-hue)">
+      {staleSince !== null && (
+        <div className="mb-4 flex justify-center">
+          <StaleBadge savedAt={staleSince} />
+        </div>
+      )}
+
       {error && (
         <div className="mb-4 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-sm text-red-300">
           {error}
@@ -123,18 +153,24 @@ export default function HuePage() {
         <p className="text-[var(--text-secondary)]">Looking for rooms on the bridge…</p>
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div
+        variants={gridVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      >
         {rooms.map((room) => (
-          <RoomTile
-            key={room.id}
-            room={room}
-            busy={busyRoomId === room.id}
-            onToggle={(on) => applyUpdate(room, { on })}
-            onBrightness={(brightness) => applyUpdate(room, { brightness })}
-            onColor={(xy) => applyUpdate(room, { xy })}
-          />
+          <motion.div key={room.id} variants={tileVariants}>
+            <RoomTile
+              room={room}
+              busy={busyRoomId === room.id}
+              onToggle={(on) => applyUpdate(room, { on })}
+              onBrightness={(brightness) => applyUpdate(room, { brightness })}
+              onColor={(xy) => applyUpdate(room, { xy })}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       <div className="mt-8 flex items-center justify-between">
         <span className="flex items-center gap-1.5 text-xs text-[var(--text-tertiary)]">

@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "motion/react";
+
 export function Toggle({
   on,
   onChange,
@@ -12,23 +16,26 @@ export function Toggle({
   ariaLabel: string;
 }) {
   return (
-    <button
+    <motion.button
       type="button"
       role="switch"
       aria-checked={on}
       aria-label={ariaLabel}
       disabled={disabled}
       onClick={() => onChange(!on)}
-      className="relative h-9 w-16 shrink-0 rounded-full border transition disabled:opacity-40"
-      style={{
+      whileTap={disabled ? undefined : { scale: 0.94 }}
+      animate={{
         borderColor: on ? accent : "var(--border-strong)",
         backgroundColor: on ? `color-mix(in srgb, ${accent} 85%, transparent)` : "var(--surface)",
       }}
+      transition={{ duration: 0.2 }}
+      className="relative h-9 w-16 shrink-0 rounded-full border disabled:opacity-40"
     >
-      <span
-        className="absolute top-1 h-6 w-6 rounded-full bg-[#08090b] shadow transition-transform"
-        style={{ transform: on ? "translateX(30px)" : "translateX(4px)" }}
+      <motion.span
+        className="absolute top-1 h-6 w-6 rounded-full bg-[#08090b] shadow"
+        animate={{ x: on ? 30 : 4 }}
+        transition={{ type: "spring", stiffness: 500, damping: 32 }}
       />
-    </button>
+    </motion.button>
   );
 }

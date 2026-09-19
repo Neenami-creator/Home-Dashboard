@@ -29,7 +29,7 @@ export function PanelShell({
           >
             <Home size={18} />
           </Link>
-          <h1 className="text-xl font-semibold" style={{ color: accent }}>
+          <h1 className="font-display text-xl font-semibold" style={{ color: accent }}>
             {title}
           </h1>
         </div>

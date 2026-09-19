@@ -5,6 +5,7 @@ import { PanelShell } from "@/components/PanelShell";
 import { ConnectSpotify } from "@/components/spotify/ConnectSpotify";
 import { NowPlayingCard } from "@/components/spotify/NowPlayingCard";
 import { DevicePicker } from "@/components/spotify/DevicePicker";
+import { StaleBadge } from "@/components/ui/StaleBadge";
 import { disconnect, getValidAccessToken } from "@/lib/spotify/auth";
 import { loadClientId } from "@/lib/spotify/config";
 import {
@@ -18,6 +19,7 @@ import {
   transferPlayback,
   SpotifyApiError,
 } from "@/lib/spotify/client";
+import { loadCache, saveCache } from "@/lib/cache";
 import type { SpotifyDevice, SpotifyPlaybackState } from "@/lib/spotify/types";
 
 // Spotify's Web API has no push mechanism for playback state, so this still
@@ -26,6 +28,7 @@ import type { SpotifyDevice, SpotifyPlaybackState } from "@/lib/spotify/types";
 // control (see withToken below) refreshes immediately regardless of timing.
 const ACTIVE_POLL_MS = 5_000;
 const IDLE_POLL_MS = 25_000;
+const CACHE_KEY = "spotify-last-playback";
 
 export default function SpotifyPage() {
   const [clientId, setClientId] = useState<string | null | undefined>(undefined);
@@ -34,6 +37,7 @@ export default function SpotifyPage() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [connected, setConnected] = useState(false);
+  const [staleSince, setStaleSince] = useState<number | null>(null);
 
   const playbackRef = useRef<SpotifyPlaybackState | null>(null);
   useEffect(() => {
@@ -62,12 +66,22 @@ export default function SpotifyPage() {
       setPlayback(state);
       setDevices(deviceList);
       setError(null);
+      setStaleSince(null);
+      if (state) saveCache(CACHE_KEY, state);
     } catch (err) {
       if (err instanceof SpotifyApiError && err.status === 401) {
         setConnected(false);
         return;
       }
       setError(err instanceof Error ? err.message : "Couldn't reach Spotify.");
+      // Cold load with nothing fetched yet this session - fall back to the
+      // last known track rather than implying nothing is playing.
+      setPlayback((prev) => {
+        if (prev) return prev;
+        const cached = loadCache<SpotifyPlaybackState>(CACHE_KEY);
+        if (cached) setStaleSince(cached.savedAt);
+        return cached?.data ?? prev;
+      });
     }
   }, [clientId]);
 
@@ -126,6 +140,12 @@ export default function SpotifyPage() {
 
   return (
     <PanelShell title="Spotify" accent="var(--accent-spotify)">
+      {staleSince !== null && (
+        <div className="mb-4 flex justify-center">
+          <StaleBadge savedAt={staleSince} />
+        </div>
+      )}
+
       {error && (
         <div className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-center text-sm text-red-300">
           {error}

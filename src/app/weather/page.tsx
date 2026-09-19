@@ -6,6 +6,7 @@ import { CitySelector } from "@/components/weather/CitySelector";
 import { AddCityForm } from "@/components/weather/AddCityForm";
 import { ConditionsCard } from "@/components/weather/ConditionsCard";
 import { ForecastStrip } from "@/components/weather/ForecastStrip";
+import { StaleBadge } from "@/components/ui/StaleBadge";
 import {
   loadCities,
   loadSelectedCityId,
@@ -14,6 +15,7 @@ import {
   removeCity,
 } from "@/lib/weather/cities";
 import { fetchCityWeather } from "@/lib/weather/client";
+import { loadCache, saveCache } from "@/lib/cache";
 import type { CityWeather, WeatherCity } from "@/lib/weather/types";
 
 const POLL_INTERVAL_MS = 10 * 60 * 1000;
@@ -24,6 +26,7 @@ export default function WeatherPage() {
   const [weather, setWeather] = useState<CityWeather | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAddCity, setShowAddCity] = useState(false);
+  const [staleSince, setStaleSince] = useState<number | null>(null);
 
   useEffect(() => {
     // Reads localStorage, which isn't available during server rendering.
@@ -39,8 +42,18 @@ export default function WeatherPage() {
       const result = await fetchCityWeather(city);
       setWeather(result);
       setError(null);
+      setStaleSince(null);
+      saveCache(`weather-${city.id}`, result);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't load the weather.");
+      // Cold load with no data yet for this city - fall back to whatever we
+      // last knew rather than showing nothing.
+      setWeather((prev) => {
+        if (prev) return prev;
+        const cached = loadCache<CityWeather>(`weather-${city.id}`);
+        if (cached) setStaleSince(cached.savedAt);
+        return cached?.data ?? prev;
+      });
     }
   }, []);
 
@@ -49,6 +62,7 @@ export default function WeatherPage() {
     // Fetches weather for the selected city on mount and on an interval.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setWeather(null);
+    setStaleSince(null);
     refresh(selectedCity);
     const interval = setInterval(() => refresh(selectedCity), POLL_INTERVAL_MS);
     return () => clearInterval(interval);
@@ -84,6 +98,12 @@ export default function WeatherPage() {
       />
 
       {showAddCity && <AddCityForm onAdd={handleAddCity} onCancel={() => setShowAddCity(false)} />}
+
+      {staleSince !== null && (
+        <div className="mb-4 flex justify-center">
+          <StaleBadge savedAt={staleSince} />
+        </div>
+      )}
 
       {error && (
         <div className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-center text-sm text-red-300">

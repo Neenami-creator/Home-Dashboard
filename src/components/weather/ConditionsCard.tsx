@@ -18,7 +18,7 @@ export function ConditionsCard({ current }: { current: CurrentConditions }) {
       </p>
       {/* eslint-disable-next-line react-hooks/static-components -- Icon selects among fixed Lucide components, not defined during render */}
       <Icon size={48} className="relative my-1 text-[var(--accent-weather)]" />
-      <p className="relative text-6xl font-semibold">
+      <p className="font-display relative text-6xl font-semibold">
         {current.airTempC !== null ? `${Math.round(current.airTempC)}°` : "—"}
       </p>
       <p className="relative text-[var(--text-secondary)]">

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import { IdleScreensaver } from "@/components/IdleScreensaver";
+import { TimeOfDayTheme } from "@/components/TimeOfDayTheme";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -11,6 +12,16 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// A display face for the clock, temperature, and other large numerals -
+// gives the dashboard its own identity rather than reading as a generic
+// Tailwind/Vercel-template app. Its optical-size axis is tuned per use via
+// font-variation-settings in globals.css rather than separate font weights.
+const fraunces = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin"],
+  axes: ["opsz", "SOFT"],
 });
 
 export const metadata: Metadata = {
@@ -44,9 +55,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <TimeOfDayTheme />
         <IdleScreensaver>{children}</IdleScreensaver>
       </body>
     </html>

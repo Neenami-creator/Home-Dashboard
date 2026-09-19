@@ -1,4 +1,7 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+"use client";
+
+import { motion, type HTMLMotionProps } from "motion/react";
+import type { ReactNode } from "react";
 
 type Size = "sm" | "md" | "lg";
 
@@ -14,14 +17,15 @@ export function IconButton({
   variant = "ghost",
   accent,
   className = "",
+  disabled,
   ...props
 }: {
   children: ReactNode;
   size?: Size;
   variant?: "ghost" | "solid";
   accent?: string;
-} & ButtonHTMLAttributes<HTMLButtonElement>) {
-  const base = "flex items-center justify-center rounded-full transition disabled:opacity-40 disabled:pointer-events-none active:scale-95";
+} & HTMLMotionProps<"button">) {
+  const base = "flex items-center justify-center rounded-full disabled:opacity-40 disabled:pointer-events-none";
   const style =
     variant === "solid"
       ? { backgroundColor: accent ?? "var(--foreground)", color: "#08090b" }
@@ -32,13 +36,17 @@ export function IconButton({
         };
 
   return (
-    <button
+    <motion.button
       type="button"
+      disabled={disabled}
+      whileTap={disabled ? undefined : { scale: 0.9 }}
+      whileHover={disabled ? undefined : { scale: 1.05 }}
+      transition={{ type: "spring", stiffness: 500, damping: 30 }}
       className={`${base} ${SIZES[size]} ${variant === "ghost" ? "hover:bg-[var(--surface-hover)]" : "hover:brightness-110"} ${className}`}
       style={style}
       {...props}
     >
       {children}
-    </button>
+    </motion.button>
   );
 }

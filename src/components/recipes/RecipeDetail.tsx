@@ -34,7 +34,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
         </div>
       )}
 
-      <h1 className="text-3xl font-semibold">{recipe.title}</h1>
+      <h1 className="font-display text-3xl font-semibold">{recipe.title}</h1>
 
       {recipe.tags.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-2">

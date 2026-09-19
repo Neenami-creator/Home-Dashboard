@@ -17,7 +17,7 @@ export function Clock({ className = "" }: { className?: string }) {
 
   return (
     <div className={className}>
-      <p className="text-right text-lg font-medium tabular-nums leading-tight">
+      <p className="font-display text-right text-lg font-medium tabular-nums leading-tight">
         {now.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}
       </p>
       <p className="text-right text-xs text-[var(--text-tertiary)]">

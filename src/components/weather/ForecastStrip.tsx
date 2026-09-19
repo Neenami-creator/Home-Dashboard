@@ -1,6 +1,18 @@
+"use client";
+
+import { motion } from "motion/react";
 import { Droplets } from "lucide-react";
 import type { ForecastDay } from "@/lib/weather/types";
 import { weatherIcon } from "@/lib/weather/icon";
+
+const gridVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06 } },
+};
+const cardVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0 },
+};
 
 function dayLabel(isoLike: string, index: number): string {
   if (index === 0) return "Today";
@@ -15,13 +27,19 @@ export function ForecastStrip({ forecast }: { forecast: ForecastDay[] }) {
   }
 
   return (
-    <div className="mx-auto grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+    <motion.div
+      variants={gridVariants}
+      initial="hidden"
+      animate="visible"
+      className="mx-auto grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4"
+    >
       {forecast.slice(0, 4).map((day, index) => {
         // Selects among a fixed set of Lucide icon components; doesn't define a new one.
         const Icon = weatherIcon(day.precis);
         return (
-          <div
+          <motion.div
             key={day.date || index}
+            variants={cardVariants}
             className="flex flex-col items-center gap-1.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-center"
           >
             <span className="text-sm font-medium text-[var(--text-secondary)]">
@@ -39,9 +57,9 @@ export function ForecastStrip({ forecast }: { forecast: ForecastDay[] }) {
                 {day.chanceOfRainPercent}%
               </span>
             )}
-          </div>
+          </motion.div>
         );
       })}
-    </div>
+    </motion.div>
   );
 }

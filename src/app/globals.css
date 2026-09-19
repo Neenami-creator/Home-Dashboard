@@ -16,6 +16,14 @@
   --accent-spotify: #2fe272;
   --accent-weather: #57b2ff;
   --accent-recipes: #ff9166;
+
+  /* Ambient background glow - set per time-of-day by TimeOfDayTheme so a
+     display that's on 24/7 feels less like one static screen and more
+     like a room that changes with the day (see components/TimeOfDayTheme).
+     These defaults match "day". */
+  --ambient-glow-1: rgba(245, 201, 74, 0.07);
+  --ambient-glow-2: rgba(87, 178, 255, 0.06);
+  --ambient-glow-3: rgba(47, 226, 114, 0.05);
 }
 
 @theme inline {
@@ -23,6 +31,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
 }
 
 html,
@@ -36,10 +45,11 @@ body {
 body {
   min-height: 100vh;
   background-image:
-    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(245, 201, 74, 0.07), transparent 60%),
-    radial-gradient(ellipse 900px 500px at 100% 0%, rgba(87, 178, 255, 0.06), transparent 60%),
-    radial-gradient(ellipse 1200px 700px at 50% 120%, rgba(47, 226, 114, 0.05), transparent 60%);
+    radial-gradient(ellipse 900px 500px at 15% -10%, var(--ambient-glow-1), transparent 60%),
+    radial-gradient(ellipse 900px 500px at 100% 0%, var(--ambient-glow-2), transparent 60%),
+    radial-gradient(ellipse 1200px 700px at 50% 120%, var(--ambient-glow-3), transparent 60%);
   background-attachment: fixed;
+  transition: background-color 4s ease;
 }
 
 /* Wall-mounted dashboard: no text selection, no callout menus, no scroll bounce. */
@@ -75,4 +85,14 @@ textarea {
 
 .animate-fade-in {
   animation: fade-in 0.35s ease-out;
+}
+
+/* The dashboard's one display face: the clock, temperature, and other big
+   numerals reach for this instead of the body sans, so the app has an
+   identity beyond default Tailwind type. Fraunces at a high optical size
+   reads as elegant rather than "storybook" the way its low-opsz forms do. */
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  letter-spacing: -0.02em;
 }
