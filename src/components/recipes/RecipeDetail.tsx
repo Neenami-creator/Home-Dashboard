@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Minus, Plus, StickyNote } from "lucide-react";
+import { Check, Minus, Plus, StickyNote } from "lucide-react";
 import type { Recipe } from "@/lib/recipes/types";
 import { recipePhotoUrl } from "@/lib/supabase/client";
 import { scaleIngredients } from "@/lib/recipes/scale";
 import { IconButton } from "@/components/ui/IconButton";
+import { useWakeLock } from "@/lib/useWakeLock";
 
 const STATS: { key: keyof Recipe; label: string }[] = [
   { key: "yield", label: "Yield" },
@@ -18,7 +19,21 @@ const STATS: { key: keyof Recipe; label: string }[] = [
 
 export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const [servings, setServings] = useState(recipe.servings);
+  const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
   const scaledIngredients = scaleIngredients(recipe.ingredients, recipe.servings, servings);
+
+  // A recipe is usually open because someone's mid-cook with messy hands -
+  // keep the screen from dimming out from under them.
+  useWakeLock(true);
+
+  function toggleIngredient(index: number) {
+    setCheckedIngredients((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  }
 
   return (
     <article className="mx-auto max-w-4xl">
@@ -69,15 +84,39 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
               </IconButton>
             </div>
           </div>
-          <ul className="space-y-2 text-[var(--foreground)]">
-            {scaledIngredients.map((ing, i) => (
-              <li key={i} className="flex justify-between gap-3 border-b border-[var(--border)] pb-2 text-sm">
-                <span>{ing.item}</span>
-                <span className="text-[var(--text-secondary)]">
-                  {ing.amount} {ing.unit}
-                </span>
-              </li>
-            ))}
+          <ul className="space-y-1">
+            {scaledIngredients.map((ing, i) => {
+              const checked = checkedIngredients.has(i);
+              return (
+                <li key={i}>
+                  <button
+                    type="button"
+                    onClick={() => toggleIngredient(i)}
+                    className="flex w-full items-center gap-3 rounded-lg border-b border-[var(--border)] py-2 text-left text-sm transition hover:bg-[var(--surface-hover)]"
+                  >
+                    <span
+                      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition"
+                      style={{
+                        borderColor: checked ? "var(--accent-recipes)" : "var(--border-strong)",
+                        backgroundColor: checked ? "var(--accent-recipes)" : "transparent",
+                      }}
+                    >
+                      {checked && <Check size={12} className="text-black" />}
+                    </span>
+                    <span
+                      className={`flex-1 ${checked ? "text-[var(--text-tertiary)] line-through" : "text-[var(--foreground)]"}`}
+                    >
+                      {ing.item}
+                    </span>
+                    <span
+                      className={checked ? "text-[var(--text-tertiary)] line-through" : "text-[var(--text-secondary)]"}
+                    >
+                      {ing.amount} {ing.unit}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
 

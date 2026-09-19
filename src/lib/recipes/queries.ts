@@ -16,6 +16,14 @@ export async function fetchRecipeById(id: string): Promise<Recipe | null> {
   return data as Recipe | null;
 }
 
+export async function fetchRecipeCount(): Promise<number> {
+  const { count, error } = await supabase
+    .from("recipes")
+    .select("id", { count: "exact", head: true });
+  if (error) throw new Error(error.message);
+  return count ?? 0;
+}
+
 export function searchRecipes(recipes: Recipe[], query: string): Recipe[] {
   const q = query.trim().toLowerCase();
   if (!q) return recipes;

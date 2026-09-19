@@ -15,8 +15,26 @@ Four panels:
   migration against your Supabase project first — see below.
 
 All four panels are built, and share a dark glass design system: warm accent colors per
-panel, a live clock, and a persistent panel-switcher in the header for quick navigation
-without returning to the home screen — useful on a display that's mounted permanently.
+panel, a live clock, a persistent panel-switcher in the header, and Fraunces (a display
+serif) for the clock, temperatures and titles, paired with Geist Sans for everything else.
+Motion (spring-based toggles, staggered tile entrances, crossfading Spotify artwork/track
+titles) runs throughout rather than instant snaps.
+
+The home screen is a live glance, not just a menu: each tile shows what's actually
+happening — how many lights are on, what's playing, the current temperature, how many
+recipes are saved — falling back to a static description the moment anything isn't
+configured or reachable. The Spotify panel also tints its glow and progress bar to the
+dominant color of whatever album art is showing, and the whole dashboard's background glow
+shifts through the day (warmer at dawn/dusk, dimmer overnight) rather than looking identical
+at 7am and midnight.
+
+If Hue, Weather or Spotify can't be reached on load (WiFi hiccup, bridge rebooting), each
+falls back to its last-known state with a small "showing last known state" badge instead of
+a blank screen — see `src/lib/cache.ts`.
+
+Recipes open in a light cooking mode: tap an ingredient to check it off while you go, and
+the screen is kept awake (Screen Wake Lock API, where supported) for as long as a recipe is
+open, since flour-covered hands aren't available to keep tapping the screen awake.
 
 After 5 minutes without a touch, the whole dashboard dims to a full-screen clock (plus
 current conditions for whichever city was last picked in the Weather panel) rather than
