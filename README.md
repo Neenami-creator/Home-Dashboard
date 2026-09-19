@@ -14,7 +14,9 @@ Four panels:
 - **Recipe Library** — searchable recipe cards. Ready, but requires you to run a one-off SQL
   migration against your Supabase project first — see below.
 
-All four panels are built. Functional-first; a dedicated visual design pass follows next.
+All four panels are built, and share a dark glass design system: warm accent colors per
+panel, a live clock, and a persistent panel-switcher in the header for quick navigation
+without returning to the home screen — useful on a display that's mounted permanently.
 
 ## Architecture
 

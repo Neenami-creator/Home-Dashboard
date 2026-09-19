@@ -1,8 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #08090b;
+  --foreground: #f3f3f4;
+
+  --surface: rgba(255, 255, 255, 0.045);
+  --surface-hover: rgba(255, 255, 255, 0.075);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --text-secondary: rgba(243, 243, 244, 0.62);
+  --text-tertiary: rgba(243, 243, 244, 0.4);
+
+  --accent-hue: #f5c94a;
+  --accent-spotify: #2fe272;
+  --accent-weather: #57b2ff;
+  --accent-recipes: #ff9166;
 }
 
 @theme inline {
@@ -20,6 +33,15 @@ body {
   overscroll-behavior: none;
 }
 
+body {
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(245, 201, 74, 0.07), transparent 60%),
+    radial-gradient(ellipse 900px 500px at 100% 0%, rgba(87, 178, 255, 0.06), transparent 60%),
+    radial-gradient(ellipse 1200px 700px at 50% 120%, rgba(47, 226, 114, 0.05), transparent 60%);
+  background-attachment: fixed;
+}
+
 /* Wall-mounted dashboard: no text selection, no callout menus, no scroll bounce. */
 * {
   -webkit-touch-callout: none;
@@ -33,4 +55,24 @@ body {
 input,
 textarea {
   user-select: text;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.35s ease-out;
 }

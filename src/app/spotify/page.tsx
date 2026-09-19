@@ -90,22 +90,22 @@ export default function SpotifyPage() {
 
   if (clientId === undefined) {
     return (
-      <PanelShell title="Spotify" accent="#1ed760">
-        <p className="text-white/50">Loading…</p>
+      <PanelShell title="Spotify" accent="var(--accent-spotify)">
+        <p className="text-[var(--text-secondary)]">Loading…</p>
       </PanelShell>
     );
   }
 
   if (!connected) {
     return (
-      <PanelShell title="Spotify" accent="#1ed760">
+      <PanelShell title="Spotify" accent="var(--accent-spotify)">
         <ConnectSpotify initialClientId={clientId} />
       </PanelShell>
     );
   }
 
   return (
-    <PanelShell title="Spotify" accent="#1ed760">
+    <PanelShell title="Spotify" accent="var(--accent-spotify)">
       {error && (
         <div className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-center text-sm text-red-300">
           {error}
@@ -124,13 +124,13 @@ export default function SpotifyPage() {
           onVolume={(percent) => withToken((token) => setVolume(token, percent))}
         />
       ) : (
-        <p className="text-center text-white/50">
+        <p className="text-center text-[var(--text-secondary)]">
           Nothing playing. Start something on a Spotify Connect device below.
         </p>
       )}
 
       <div className="mt-10">
-        <h2 className="mb-3 text-center text-sm uppercase tracking-wide text-white/40">
+        <h2 className="mb-3 text-center text-sm uppercase tracking-wide text-[var(--text-tertiary)]">
           Devices
         </h2>
         <DevicePicker
@@ -147,7 +147,7 @@ export default function SpotifyPage() {
           setConnected(false);
           setPlayback(null);
         }}
-        className="mx-auto mt-8 block text-xs text-white/30 underline underline-offset-2"
+        className="mx-auto mt-8 block text-xs text-[var(--text-tertiary)] underline underline-offset-2"
       >
         Disconnect Spotify
       </button>

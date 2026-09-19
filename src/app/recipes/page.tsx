@@ -21,17 +21,17 @@ export default function RecipesPage() {
   const visible = recipes ? searchRecipes(recipes, query) : [];
 
   return (
-    <PanelShell title="Recipes" accent="#ff8a5c">
+    <PanelShell title="Recipes" accent="var(--accent-recipes)">
       <div className="mb-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by title, tag or ingredient…"
-          className="w-full max-w-sm rounded-full border border-white/15 bg-black/30 px-4 py-2 text-white sm:w-80"
+          className="w-full max-w-sm rounded-full border border-[var(--border)] bg-black/30 px-4 py-2 text-white sm:w-80"
         />
         <Link
           href="/recipes/upload"
-          className="rounded-full border border-white/15 px-4 py-2 text-sm text-white/70 transition hover:bg-white/10"
+          className="rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)] transition hover:bg-[var(--surface-hover)]"
         >
           + Add recipe
         </Link>
@@ -43,10 +43,10 @@ export default function RecipesPage() {
         </div>
       )}
 
-      {!recipes && !error && <p className="text-center text-white/50">Loading recipes…</p>}
+      {!recipes && !error && <p className="text-center text-[var(--text-secondary)]">Loading recipes…</p>}
 
       {recipes && visible.length === 0 && (
-        <p className="text-center text-white/50">
+        <p className="text-center text-[var(--text-secondary)]">
           {recipes.length === 0 ? "No recipes yet." : "Nothing matches that search."}
         </p>
       )}

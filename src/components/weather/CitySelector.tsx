@@ -24,8 +24,8 @@ export function CitySelector({
             onClick={() => onSelect(city.id)}
             className={`rounded-full border px-4 py-2 text-sm transition ${
               city.id === selectedId
-                ? "border-blue-300 bg-blue-300/10 text-blue-300"
-                : "border-white/15 text-white/70 hover:bg-white/10"
+                ? "border-[color-mix(in_srgb,var(--accent-weather)_45%,transparent)] bg-[color-mix(in_srgb,var(--accent-weather)_12%,transparent)] text-[var(--accent-weather)]"
+                : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)]"
             }`}
           >
             {city.name}
@@ -35,7 +35,7 @@ export function CitySelector({
               type="button"
               onClick={() => onRemove(city.id)}
               aria-label={`Remove ${city.name}`}
-              className="absolute -right-1 -top-1 hidden h-4 w-4 rounded-full bg-white/20 text-[10px] leading-4 text-white group-hover:block"
+              className="absolute -right-1 -top-1 hidden h-4 w-4 rounded-full bg-[var(--surface-hover)] text-[10px] leading-4 text-white group-hover:block"
             >
               ×
             </button>
@@ -45,7 +45,7 @@ export function CitySelector({
       <button
         type="button"
         onClick={onAddCity}
-        className="rounded-full border border-dashed border-white/20 px-4 py-2 text-sm text-white/50 transition hover:bg-white/10"
+        className="rounded-full border border-dashed border-[var(--border-strong)] px-4 py-2 text-sm text-[var(--text-secondary)] transition hover:bg-[var(--surface-hover)]"
       >
         + Add city
       </button>

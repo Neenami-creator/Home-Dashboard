@@ -1,6 +1,9 @@
 "use client";
 
+import { Speaker } from "lucide-react";
 import type { SpotifyDevice } from "@/lib/spotify/types";
+
+const ACCENT = "var(--accent-spotify)";
 
 export function DevicePicker({
   devices,
@@ -13,7 +16,7 @@ export function DevicePicker({
 }) {
   if (devices.length === 0) {
     return (
-      <p className="text-sm text-white/40">
+      <p className="text-center text-sm text-[var(--text-tertiary)]">
         No Spotify Connect devices found. Open Spotify on a Sonos speaker (or any device) so
         it shows up here.
       </p>
@@ -28,12 +31,18 @@ export function DevicePicker({
           type="button"
           disabled={busy || !device.id || device.is_active}
           onClick={() => device.id && onSelect(device.id)}
-          className={`rounded-full border px-4 py-2 text-sm transition disabled:opacity-60 ${
+          className="flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition hover:bg-[var(--surface-hover)] disabled:opacity-60"
+          style={
             device.is_active
-              ? "border-[#1ed760] bg-[#1ed760]/10 text-[#1ed760]"
-              : "border-white/15 text-white/70 hover:bg-white/10"
-          }`}
+              ? {
+                  borderColor: `color-mix(in srgb, ${ACCENT} 45%, transparent)`,
+                  backgroundColor: `color-mix(in srgb, ${ACCENT} 12%, transparent)`,
+                  color: ACCENT,
+                }
+              : { borderColor: "var(--border)", color: "var(--text-secondary)" }
+          }
         >
+          <Speaker size={14} />
           {device.name}
         </button>
       ))}

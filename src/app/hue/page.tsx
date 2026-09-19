@@ -67,15 +67,15 @@ export default function HuePage() {
 
   if (config === undefined) {
     return (
-      <PanelShell title="Hue Lights" accent="#f5c94a">
-        <p className="text-white/50">Loading…</p>
+      <PanelShell title="Hue Lights" accent="var(--accent-hue)">
+        <p className="text-[var(--text-secondary)]">Loading…</p>
       </PanelShell>
     );
   }
 
   if (!config) {
     return (
-      <PanelShell title="Hue Lights" accent="#f5c94a">
+      <PanelShell title="Hue Lights" accent="var(--accent-hue)">
         <BridgeSettings initial={null} onSave={(cfg) => {
           saveBridgeConfig(cfg);
           setConfig(cfg);
@@ -85,7 +85,7 @@ export default function HuePage() {
   }
 
   return (
-    <PanelShell title="Hue Lights" accent="#f5c94a">
+    <PanelShell title="Hue Lights" accent="var(--accent-hue)">
       {error && (
         <div className="mb-4 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-sm text-red-300">
           {error}
@@ -93,7 +93,7 @@ export default function HuePage() {
       )}
 
       {rooms.length === 0 && !error && (
-        <p className="text-white/50">Looking for rooms on the bridge…</p>
+        <p className="text-[var(--text-secondary)]">Looking for rooms on the bridge…</p>
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -115,7 +115,7 @@ export default function HuePage() {
           clearBridgeConfig();
           setConfig(null);
         }}
-        className="mt-8 text-xs text-white/30 underline underline-offset-2"
+        className="mt-8 text-xs text-[var(--text-tertiary)] underline underline-offset-2"
       >
         Forget this bridge
       </button>

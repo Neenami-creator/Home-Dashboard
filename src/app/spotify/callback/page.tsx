@@ -38,12 +38,12 @@ function CallbackInner() {
       {error ? (
         <>
           <p className="text-red-400">{error}</p>
-          <a href="/spotify" className="text-sm text-white/50 underline underline-offset-2">
+          <a href="/spotify" className="text-sm text-[var(--text-secondary)] underline underline-offset-2">
             Back to Spotify panel
           </a>
         </>
       ) : (
-        <p className="text-white/50">Connecting to Spotify…</p>
+        <p className="text-[var(--text-secondary)]">Connecting to Spotify…</p>
       )}
     </div>
   );
@@ -53,7 +53,7 @@ export default function SpotifyCallbackPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center text-white/50">
+        <div className="flex min-h-screen items-center justify-center text-[var(--text-secondary)]">
           Connecting to Spotify…
         </div>
       }

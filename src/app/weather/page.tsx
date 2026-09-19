@@ -74,7 +74,7 @@ export default function WeatherPage() {
   }
 
   return (
-    <PanelShell title="Weather" accent="#4ea8ff">
+    <PanelShell title="Weather" accent="var(--accent-weather)">
       <CitySelector
         cities={cities}
         selectedId={selectedId}
@@ -97,7 +97,7 @@ export default function WeatherPage() {
         </p>
       ))}
 
-      {!weather && !error && <p className="text-center text-white/50">Loading weather…</p>}
+      {!weather && !error && <p className="text-center text-[var(--text-secondary)]">Loading weather…</p>}
 
       {weather?.current && (
         <div className="mb-8">

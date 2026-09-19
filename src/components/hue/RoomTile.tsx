@@ -1,8 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { Lightbulb, Palette } from "lucide-react";
 import type { HueRoomState } from "@/lib/hue/types";
 import { HUE_COLOR_PRESETS } from "@/lib/hue/presets";
+import { Card } from "@/components/ui/Card";
+import { Toggle } from "@/components/ui/Toggle";
+
+const ACCENT = "var(--accent-hue)";
 
 export function RoomTile({
   room,
@@ -21,31 +26,30 @@ export function RoomTile({
   const [showColors, setShowColors] = useState(false);
 
   return (
-    <div
-      className={`rounded-2xl border p-5 transition ${
-        room.on ? "border-amber-300/40 bg-amber-300/10" : "border-white/10 bg-white/5"
-      }`}
-    >
+    <Card glow={ACCENT} active={room.on} className="p-5">
       <div className="flex items-center justify-between">
-        <span className="text-lg font-medium">{room.name}</span>
-        <button
-          type="button"
+        <div className="flex items-center gap-3">
+          <div
+            className="flex h-10 w-10 items-center justify-center rounded-xl"
+            style={{
+              backgroundColor: room.on ? `color-mix(in srgb, ${ACCENT} 22%, transparent)` : "var(--surface-hover)",
+              color: room.on ? ACCENT : "var(--text-tertiary)",
+            }}
+          >
+            <Lightbulb size={19} fill={room.on ? "currentColor" : "none"} />
+          </div>
+          <span className="text-lg font-medium">{room.name}</span>
+        </div>
+        <Toggle
+          on={room.on}
+          onChange={onToggle}
+          accent={ACCENT}
           disabled={busy || !room.groupedLightId}
-          onClick={() => onToggle(!room.on)}
-          className={`h-9 w-16 rounded-full border transition disabled:opacity-40 ${
-            room.on ? "border-amber-300 bg-amber-300" : "border-white/20 bg-white/10"
-          }`}
-          aria-label={room.on ? "Turn off" : "Turn on"}
-        >
-          <span
-            className={`block h-7 w-7 translate-x-1 rounded-full bg-black/70 transition ${
-              room.on ? "translate-x-8 bg-black" : ""
-            }`}
-          />
-        </button>
+          ariaLabel={room.on ? `Turn off ${room.name}` : `Turn on ${room.name}`}
+        />
       </div>
 
-      <div className="mt-4">
+      <div className="mt-5">
         <input
           type="range"
           min={1}
@@ -54,16 +58,18 @@ export function RoomTile({
           disabled={busy || !room.on || !room.groupedLightId}
           onChange={(e) => setLocalBrightness(Number(e.target.value))}
           onPointerUp={() => onBrightness(localBrightness)}
-          className="w-full accent-amber-300 disabled:opacity-40"
+          className="w-full accent-current disabled:opacity-40"
+          style={{ color: ACCENT }}
         />
-        <div className="mt-1 text-right text-xs text-white/50">{localBrightness}%</div>
+        <div className="mt-1 text-right text-xs text-[var(--text-tertiary)]">{localBrightness}%</div>
       </div>
 
       <button
         type="button"
         onClick={() => setShowColors((v) => !v)}
-        className="mt-2 text-xs text-white/50 underline underline-offset-2"
+        className="mt-1 flex items-center gap-1.5 text-xs text-[var(--text-tertiary)] transition hover:text-[var(--text-secondary)]"
       >
+        <Palette size={13} />
         {showColors ? "Hide colors" : "Colors"}
       </button>
 
@@ -76,12 +82,12 @@ export function RoomTile({
               title={preset.name}
               disabled={busy || !room.groupedLightId}
               onClick={() => onColor(preset.xy)}
-              className="h-8 w-8 rounded-full border border-white/20 disabled:opacity-40"
+              className="h-8 w-8 rounded-full border border-[var(--border-strong)] transition hover:scale-110 disabled:opacity-40"
               style={{ backgroundColor: preset.swatch }}
             />
           ))}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

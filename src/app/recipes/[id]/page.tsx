@@ -18,14 +18,14 @@ export default function RecipePage({ params }: { params: Promise<{ id: string }>
   }, [id]);
 
   return (
-    <PanelShell title="Recipes" accent="#ff8a5c">
+    <PanelShell title="Recipes" accent="var(--accent-recipes)">
       {error && (
         <div className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-center text-sm text-red-300">
           {error}
         </div>
       )}
-      {recipe === undefined && !error && <p className="text-center text-white/50">Loading…</p>}
-      {recipe === null && <p className="text-center text-white/50">Recipe not found.</p>}
+      {recipe === undefined && !error && <p className="text-center text-[var(--text-secondary)]">Loading…</p>}
+      {recipe === null && <p className="text-center text-[var(--text-secondary)]">Recipe not found.</p>}
       {recipe && <RecipeDetail recipe={recipe} />}
     </PanelShell>
   );
