@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ShoppingCart } from "lucide-react";
 import { PanelShell } from "@/components/PanelShell";
 import { RecipeGridCard } from "@/components/recipes/RecipeGridCard";
 import { fetchRecipes, searchRecipes } from "@/lib/recipes/queries";
@@ -30,21 +29,12 @@ export default function RecipesPage() {
           placeholder="Search by title, tag or ingredient…"
           className="w-full max-w-sm rounded-full border border-[var(--border)] bg-black/30 px-4 py-2 text-white sm:w-80"
         />
-        <div className="flex gap-2">
-          <Link
-            href="/shopping"
-            className="flex items-center gap-1.5 rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)] transition hover:bg-[var(--surface-hover)]"
-          >
-            <ShoppingCart size={14} />
-            Shopping list
-          </Link>
-          <Link
-            href="/recipes/upload"
-            className="rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)] transition hover:bg-[var(--surface-hover)]"
-          >
-            + Add recipe
-          </Link>
-        </div>
+        <Link
+          href="/recipes/upload"
+          className="rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)] transition hover:bg-[var(--surface-hover)]"
+        >
+          + Add recipe
+        </Link>
       </div>
 
       {error && (

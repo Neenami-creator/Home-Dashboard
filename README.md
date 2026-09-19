@@ -36,8 +36,7 @@ Recipes open in a light cooking mode: tap an ingredient to check it off while yo
 the screen is kept awake (Screen Wake Lock API, where supported) for as long as a recipe is
 open, since flour-covered hands aren't available to keep tapping the screen awake.
 
-After 5 minutes idle, the dashboard becomes a clock (and photo frame, if configured) — see
-**Idle screensaver** below.
+After 5 minutes idle, the dashboard becomes a clock — see **Idle screensaver** below.
 
 ## Architecture
 
@@ -210,26 +209,12 @@ re-encoded as JPEG in the browser before upload, to stay within the shared 1GB s
 New recipes appear immediately — no redeploy needed, since the upload route writes straight
 to Supabase.
 
-Run `supabase/migrations/0002_shopping_list.sql` too, for the **shopping list** (reachable
-from the cart icon in the Recipes panel). Unlike `recipes`, this table is public read *and
-write* — no passcode — since it's meant to be checked off directly from the dashboard with
-nothing but the anon key. Each recipe's "Add to shopping list" button merges its ingredients
-into any existing unchecked item with the same name and unit when both amounts are plain
-numbers (so "2 eggs" + "3 eggs" becomes one "5 eggs" row); anything else is added as its own
-row rather than risk merging the wrong things.
-
-Run `supabase/migrations/0003_screensaver_photos.sql` for the **screensaver photos** bucket
-used by the idle screensaver (see below) — upload photos from Settings, gated by the same
-`RECIPE_UPLOAD_PASSCODE`.
-
 ## Idle screensaver
 
 After 5 minutes without a touch, the dashboard dims to a full-screen clock and current
 conditions rather than sitting on whatever panel was last open — an OLED/LCD burn-in
 precaution for a display that's mounted permanently, and a reason to glance at it in the
-first place. If any photos have been uploaded (Settings → Screensaver photos), it becomes a
-slow-rotating digital photo frame with the clock overlaid instead of a bare clock, crossfading
-every 15 seconds. Any tap, click or key press wakes it back to exactly where it was.
+first place. Any tap, click or key press wakes it back to exactly where it was.
 
 ## Offline resilience
 
