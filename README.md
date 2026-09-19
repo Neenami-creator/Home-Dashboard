@@ -72,6 +72,36 @@ from this panel, the Hue app, a physical switch, or a schedule — rather than w
 poll. A 60-second poll runs alongside it purely as a safety net in case the stream drops; the
 small dot next to "Forget this bridge" shows whether the stream is currently live.
 
+Each room also shows its real Hue **scenes** (Relax, Concentrate, whatever's configured in
+the Hue app) via `/clip/v2/resource/scene`, alongside the dashboard's own generic color
+presets — recalling a scene is how most people actually use smart lighting day to day.
+
+## Routines
+
+One-tap shortcuts on the home screen — "Eating dinner," "Cooking," "Watching a movie" ship
+by default — that apply a Hue scene to one or more rooms at once (and, optionally, pause
+Spotify) without opening the Hue panel. Assign scenes per room on the **Settings** screen
+(gear icon in any panel header, or the gear next to the routine buttons on the home screen);
+add custom routines there too. Routines live in `localStorage`, same as the rest of this
+app's per-device settings — there's no server-side routines table.
+
+## Settings screen
+
+A single screen (gear icon, top-right of any panel) for everything that was previously only
+reachable by re-triggering a panel's first-run setup form: reconfigure or forget the Hue
+bridge, reconnect or disconnect Spotify, edit routines, and see whether the recipe library's
+Supabase connection is configured.
+
+## Dashboard access PIN
+
+Optional, and off by default. Without it, anyone who finds the deployed URL can control your
+lights and Spotify — there's no login screen otherwise. Set `DASHBOARD_PIN` and
+`DASHBOARD_SESSION_SECRET` (see `.env.example`) and every route redirects to a PIN entry
+screen until unlocked; the unlock is remembered for a year via an `httpOnly` cookie, so a
+wall-mounted device only needs it entered once. Implemented as Next.js middleware
+(`src/middleware.ts`) — this Next.js canary calls that convention deprecated in favor of a
+`proxy.ts` rename, but it still fully works; revisit if a future Next upgrade removes it.
+
 ## Spotify panel setup
 
 1. Create a free app at [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard)

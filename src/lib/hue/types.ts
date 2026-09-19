@@ -32,3 +32,15 @@ export type HueRoomState = {
   on: boolean;
   brightness: number; // 0-100
 };
+
+export type HueSceneResource = {
+  id: string;
+  metadata: { name: string };
+  group: { rid: string; rtype: string };
+};
+
+export type HueScene = {
+  id: string;
+  name: string;
+  roomId: string;
+};

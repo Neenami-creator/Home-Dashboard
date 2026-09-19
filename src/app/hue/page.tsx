@@ -7,10 +7,16 @@ import { BridgeSettings } from "@/components/hue/BridgeSettings";
 import { RoomTile } from "@/components/hue/RoomTile";
 import { StaleBadge } from "@/components/ui/StaleBadge";
 import { loadBridgeConfig, saveBridgeConfig, clearBridgeConfig } from "@/lib/hue/config";
-import { fetchRoomStates, setGroupedLightState, HueBridgeError } from "@/lib/hue/client";
+import {
+  fetchRoomStates,
+  fetchScenes,
+  recallScene,
+  setGroupedLightState,
+  HueBridgeError,
+} from "@/lib/hue/client";
 import { subscribeToHueEvents } from "@/lib/hue/eventstream";
 import { loadCache, saveCache } from "@/lib/cache";
-import type { BridgeConfig, HueRoomState } from "@/lib/hue/types";
+import type { BridgeConfig, HueRoomState, HueScene } from "@/lib/hue/types";
 
 // The event stream (see below) delivers changes the instant they happen -
 // from this panel, the Hue app, a physical switch, or a schedule - so this
@@ -30,6 +36,7 @@ const tileVariants = {
 export default function HuePage() {
   const [config, setConfig] = useState<BridgeConfig | null | undefined>(undefined);
   const [rooms, setRooms] = useState<HueRoomState[]>([]);
+  const [scenes, setScenes] = useState<HueScene[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busyRoomId, setBusyRoomId] = useState<string | null>(null);
   const [live, setLive] = useState(false);
@@ -43,8 +50,9 @@ export default function HuePage() {
 
   const refresh = useCallback(async (cfg: BridgeConfig) => {
     try {
-      const states = await fetchRoomStates(cfg);
+      const [states, sceneList] = await Promise.all([fetchRoomStates(cfg), fetchScenes(cfg)]);
       setRooms(states);
+      setScenes(sceneList);
       setError(null);
       setStaleSince(null);
       saveCache(CACHE_KEY, states);
@@ -116,6 +124,22 @@ export default function HuePage() {
     }
   }
 
+  async function applyScene(room: HueRoomState, sceneId: string) {
+    if (!config) return;
+    setBusyRoomId(room.id);
+    try {
+      await recallScene(config, sceneId);
+      // Scenes change on/brightness/color together; the event stream will
+      // pick up the resulting grouped_light change, but nudge a refresh in
+      // case that's slow to arrive.
+      setTimeout(() => refresh(config), 500);
+    } catch (err) {
+      setError(err instanceof HueBridgeError ? err.message : "Couldn't recall that scene.");
+    } finally {
+      setBusyRoomId(null);
+    }
+  }
+
   if (config === undefined) {
     return (
       <PanelShell title="Hue Lights" accent="var(--accent-hue)">
@@ -163,10 +187,12 @@ export default function HuePage() {
           <motion.div key={room.id} variants={tileVariants}>
             <RoomTile
               room={room}
+              scenes={scenes.filter((s) => s.roomId === room.id)}
               busy={busyRoomId === room.id}
               onToggle={(on) => applyUpdate(room, { on })}
               onBrightness={(brightness) => applyUpdate(room, { brightness })}
               onColor={(xy) => applyUpdate(room, { xy })}
+              onScene={(sceneId) => applyScene(room, sceneId)}
             />
           </motion.div>
         ))}

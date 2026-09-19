@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home } from "lucide-react";
+import { Home, Settings } from "lucide-react";
 import type { ReactNode } from "react";
 import { PANELS } from "@/lib/panels";
 import { Clock } from "@/components/Clock";
@@ -56,7 +56,16 @@ export function PanelShell({
           })}
         </nav>
 
-        <Clock />
+        <div className="flex items-center gap-3">
+          <Link
+            href="/settings"
+            aria-label="Settings"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--text-tertiary)] transition hover:bg-[var(--surface-hover)] hover:text-[var(--text-secondary)]"
+          >
+            <Settings size={16} />
+          </Link>
+          <Clock />
+        </div>
       </header>
       <main className="flex-1 overflow-y-auto p-6">
         <div className="animate-fade-in">{children}</div>

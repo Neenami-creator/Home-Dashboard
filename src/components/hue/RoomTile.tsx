@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Lightbulb, Palette } from "lucide-react";
-import type { HueRoomState } from "@/lib/hue/types";
+import { Lightbulb, Palette, Sparkles } from "lucide-react";
+import type { HueRoomState, HueScene } from "@/lib/hue/types";
 import { HUE_COLOR_PRESETS } from "@/lib/hue/presets";
 import { Card } from "@/components/ui/Card";
 import { Toggle } from "@/components/ui/Toggle";
@@ -11,15 +11,19 @@ const ACCENT = "var(--accent-hue)";
 
 export function RoomTile({
   room,
+  scenes,
   onToggle,
   onBrightness,
   onColor,
+  onScene,
   busy,
 }: {
   room: HueRoomState;
+  scenes: HueScene[];
   onToggle: (on: boolean) => void;
   onBrightness: (brightness: number) => void;
   onColor: (xy: [number, number]) => void;
+  onScene: (sceneId: string) => void;
   busy: boolean;
 }) {
   const [localBrightness, setLocalBrightness] = useState(room.brightness);
@@ -64,13 +68,35 @@ export function RoomTile({
         <div className="mt-1 text-right text-xs text-[var(--text-tertiary)]">{localBrightness}%</div>
       </div>
 
+      {scenes.length > 0 && (
+        <div className="mt-3">
+          <p className="mb-1.5 flex items-center gap-1.5 text-xs text-[var(--text-tertiary)]">
+            <Sparkles size={13} />
+            Scenes
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {scenes.map((scene) => (
+              <button
+                key={scene.id}
+                type="button"
+                disabled={busy}
+                onClick={() => onScene(scene.id)}
+                className="rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--text-secondary)] transition hover:border-[var(--border-strong)] hover:bg-[var(--surface-hover)] disabled:opacity-40"
+              >
+                {scene.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <button
         type="button"
         onClick={() => setShowColors((v) => !v)}
-        className="mt-1 flex items-center gap-1.5 text-xs text-[var(--text-tertiary)] transition hover:text-[var(--text-secondary)]"
+        className="mt-3 flex items-center gap-1.5 text-xs text-[var(--text-tertiary)] transition hover:text-[var(--text-secondary)]"
       >
         <Palette size={13} />
-        {showColors ? "Hide colors" : "Colors"}
+        {showColors ? "Hide colors" : "Quick colors"}
       </button>
 
       {showColors && (
