@@ -21,7 +21,8 @@ export function Clock({ className = "" }: { className?: string }) {
         {now.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}
       </p>
       <p className="text-right text-xs text-[var(--text-tertiary)]">
-        {now.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })}
+        {now.toLocaleDateString(undefined, { weekday: "long" })} ·{" "}
+        {now.toLocaleDateString(undefined, { day: "numeric", month: "long" })}
       </p>
     </div>
   );

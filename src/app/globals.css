@@ -2,28 +2,44 @@
 
 :root {
   --background: #08090b;
-  --foreground: #f3f3f4;
+  --foreground: #f4f3ef;
 
-  --surface: rgba(255, 255, 255, 0.045);
-  --surface-hover: rgba(255, 255, 255, 0.075);
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
+  --bg: var(--background);
+  --bg-elevated: #0c0e11;
 
-  --text-secondary: rgba(243, 243, 244, 0.62);
-  --text-tertiary: rgba(243, 243, 244, 0.4);
+  /* Quiet Luxury / Luminous Instrument: surfaces read as smoked, low-
+     reflectivity material rather than glass panels, so these sit much
+     closer to the background than a typical "frosted card" dashboard. */
+  --surface: rgba(255, 255, 255, 0.025);
+  --surface-hover: rgba(255, 255, 255, 0.055);
+  --surface-1: var(--surface);
+  --surface-2: rgba(255, 255, 255, 0.04);
+
+  --border: rgba(255, 255, 255, 0.065);
+  --border-strong: rgba(255, 255, 255, 0.11);
+  --inset-highlight: rgba(255, 255, 255, 0.045);
+
+  --text-primary: var(--foreground);
+  --text-secondary: #a5a7ac;
+  --text-tertiary: #70737a;
 
   --accent-hue: #f5c94a;
   --accent-spotify: #2fe272;
   --accent-weather: #57b2ff;
   --accent-recipes: #ff9166;
+  --hue: var(--accent-hue);
+  --spotify: var(--accent-spotify);
+  --weather: var(--accent-weather);
+  --recipes: var(--accent-recipes);
 
   /* Ambient background glow - set per time-of-day by TimeOfDayTheme so a
      display that's on 24/7 feels less like one static screen and more
      like a room that changes with the day (see components/TimeOfDayTheme).
-     These defaults match "day". */
-  --ambient-glow-1: rgba(245, 201, 74, 0.07);
-  --ambient-glow-2: rgba(87, 178, 255, 0.06);
-  --ambient-glow-3: rgba(47, 226, 114, 0.05);
+     These defaults match "day"; kept deliberately faint so the surface
+     reads as ambient light rather than a coloured background. */
+  --ambient-glow-1: rgba(125, 160, 174, 0.03);
+  --ambient-glow-2: rgba(125, 160, 174, 0.025);
+  --ambient-glow-3: rgba(47, 226, 114, 0.02);
 }
 
 @theme inline {
@@ -45,11 +61,12 @@ body {
 body {
   min-height: 100vh;
   background-image:
-    radial-gradient(ellipse 900px 500px at 15% -10%, var(--ambient-glow-1), transparent 60%),
-    radial-gradient(ellipse 900px 500px at 100% 0%, var(--ambient-glow-2), transparent 60%),
-    radial-gradient(ellipse 1200px 700px at 50% 120%, var(--ambient-glow-3), transparent 60%);
+    radial-gradient(900px 620px at 50% -10%, rgba(255, 255, 255, 0.035), transparent 70%),
+    radial-gradient(700px 500px at 78% 28%, var(--ambient-glow-1), transparent 75%),
+    radial-gradient(1100px 680px at 18% 118%, var(--ambient-glow-3), transparent 70%);
+  background-color: #070809;
   background-attachment: fixed;
-  transition: background-color 4s ease;
+  transition: background-color 6s ease;
 }
 
 /* Wall-mounted dashboard: no text selection, no callout menus, no scroll bounce. */
@@ -95,4 +112,86 @@ textarea {
   font-family: var(--font-display), Georgia, serif;
   font-variation-settings: "opsz" 144, "SOFT" 0;
   letter-spacing: -0.02em;
+}
+
+/* Tiny uppercase tag used above high-value information (module names,
+   section headers) - Geist at instrument-panel scale rather than a
+   regular heading, so it reads as a label etched into the hardware. */
+.instrument-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* The dashboard's one shared "material": smoked, low-reflectivity black
+   with a faint inset highlight rather than a glass card. Every control
+   surface (Home tiles, and later Hue/Spotify/Weather/Recipes panels)
+   should reach for this instead of a flat bg-[var(--surface)] block. */
+.control-surface {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.012) 55%, rgba(255, 255, 255, 0.022));
+  box-shadow:
+    inset 0 1px 0 var(--inset-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 18px 40px rgba(0, 0, 0, 0.14);
+  transition:
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.control-surface:hover {
+  border-color: var(--border-strong);
+}
+
+.control-surface:active {
+  transform: scale(0.985);
+}
+
+/* The accent is a light source embedded in the material, not a colour
+   fill - see --accent set per-instance and data-active for "in use". */
+.control-surface::before {
+  content: "";
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  right: -100px;
+  top: -120px;
+  border-radius: 50%;
+  background: var(--accent, transparent);
+  opacity: 0.07;
+  filter: blur(70px);
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+
+.control-surface[data-active="true"]::before {
+  opacity: 0.14;
+}
+
+/* The recurring "precision line" signature: a short low-opacity accent
+   bar used sparingly wherever a surface wants to register its state
+   without a large coloured fill. */
+.precision-line {
+  display: block;
+  height: 2px;
+  width: 28px;
+  border-radius: 999px;
+  background: var(--accent, var(--text-tertiary));
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in {
+    animation: none;
+  }
+
+  .control-surface {
+    transition: none;
+  }
 }

@@ -43,10 +43,11 @@ export function RoutineBar() {
           <motion.button
             key={routine.id}
             type="button"
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.985 }}
+            transition={{ type: "spring", stiffness: 440, damping: 38, mass: 0.65 }}
             disabled={isRunning}
             onClick={() => handleRun(routine)}
-            className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2.5 text-sm transition hover:border-[var(--border-strong)] hover:bg-[var(--surface-hover)] disabled:opacity-60"
+            className="flex h-12 items-center gap-2 rounded-[14px] border border-[var(--border)] bg-[var(--surface-2)] px-[18px] text-[15px] shadow-[inset_0_1px_0_var(--inset-highlight)] transition-colors hover:border-[var(--border-strong)] disabled:opacity-60"
           >
             {justRan ? (
               <Check size={16} className="text-[var(--accent-hue)]" />
@@ -60,7 +61,7 @@ export function RoutineBar() {
       <Link
         href="/settings#routines"
         aria-label="Edit routines"
-        className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-tertiary)] transition hover:bg-[var(--surface-hover)]"
+        className="flex h-12 w-12 items-center justify-center rounded-[14px] border border-[var(--border)] bg-[var(--surface-2)] text-[var(--text-tertiary)] shadow-[inset_0_1px_0_var(--inset-highlight)] transition-colors hover:border-[var(--border-strong)]"
       >
         <Settings size={15} />
       </Link>

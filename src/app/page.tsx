@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
 import { PANELS } from "@/lib/panels";
@@ -129,8 +129,10 @@ function PanelTile({ panel }: { panel: (typeof PANELS)[number] }) {
       .catch(() => {});
   });
 
+  const isActive = Boolean(liveStatus);
+
   return (
-    <motion.div variants={tileVariants}>
+    <motion.div variants={tileVariants} className="min-h-0">
       <Link
         href={panel.href}
         onPointerDown={longPress.onPointerDown}
@@ -140,24 +142,27 @@ function PanelTile({ panel }: { panel: (typeof PANELS)[number] }) {
         onClick={(e) => {
           if (longPress.wasLongPress()) e.preventDefault();
         }}
-        className="group relative flex aspect-square flex-col justify-between overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 transition hover:border-[var(--border-strong)] hover:bg-[var(--surface-hover)]"
+        data-active={isActive}
+        style={{ "--accent": panel.accent } as CSSProperties}
+        className="control-surface flex h-full min-h-0 flex-col justify-between p-[26px]"
       >
-        <div
-          className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full opacity-20 blur-3xl transition group-hover:opacity-30"
-          style={{ backgroundColor: panel.accent }}
-        />
-        <div
-          className="flex h-12 w-12 items-center justify-center rounded-2xl"
-          style={{ backgroundColor: `color-mix(in srgb, ${panel.accent} 18%, transparent)`, color: panel.accent }}
-        >
-          <Icon size={24} />
+        <div className="flex items-start justify-between">
+          <span className="instrument-label">{panel.label}</span>
+          <span
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-[var(--border)] bg-[var(--surface-2)] shadow-[inset_0_1px_0_var(--inset-highlight)] transition-colors"
+            style={{ color: isActive ? panel.accent : "var(--text-tertiary)" }}
+          >
+            <Icon size={21} strokeWidth={1.6} />
+          </span>
         </div>
+
         <div>
-          <span className="font-display block text-2xl font-medium">{panel.name}</span>
-          <span className="mt-1 flex items-center gap-1.5 truncate text-sm text-[var(--text-secondary)]">
-            {justRanAction && <Check size={14} className="shrink-0" style={{ color: panel.accent }} />}
+          <span className="font-display block text-[25px] font-normal leading-tight">{panel.name}</span>
+          <span className="mt-1.5 flex items-center gap-1.5 truncate text-[14px] text-[var(--text-secondary)]">
+            {justRanAction && <Check size={13} className="shrink-0" style={{ color: panel.accent }} />}
             {justRanAction ? QUICK_ACTION_LABELS[panel.href] : (liveStatus ?? panel.description)}
           </span>
+          <span className="precision-line mt-3" style={{ backgroundColor: panel.accent }} />
         </div>
       </Link>
     </motion.div>
@@ -166,23 +171,24 @@ function PanelTile({ panel }: { panel: (typeof PANELS)[number] }) {
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-10 p-8">
-      <div className="text-center">
-        <p className="text-sm uppercase tracking-[0.3em] text-[var(--text-tertiary)]">
-          Home Dashboard
-        </p>
-        <div className="mt-3">
-          <Clock className="[&_p:first-child]:text-center [&_p:first-child]:text-5xl [&_p:last-child]:text-center [&_p:last-child]:text-sm" />
-        </div>
+    <div className="flex h-screen flex-col overflow-hidden px-8 py-7">
+      <div className="flex flex-col items-center gap-2">
+        <p className="instrument-label">Home</p>
+        <Clock
+          className="[&_p:first-child]:font-display [&_p:first-child]:text-center [&_p:first-child]:text-[76px] [&_p:first-child]:font-normal [&_p:first-child]:leading-[0.9] [&_p:first-child]:tracking-[-0.035em]
+            [&_p:last-child]:mt-2 [&_p:last-child]:text-center [&_p:last-child]:text-[13px] [&_p:last-child]:tracking-[0.06em] [&_p:last-child]:text-[var(--text-tertiary)]"
+        />
       </div>
 
-      <RoutineBar />
+      <div className="flex justify-center py-6">
+        <RoutineBar />
+      </div>
 
       <motion.div
         variants={gridVariants}
         initial="hidden"
         animate="visible"
-        className="grid w-full max-w-3xl grid-cols-2 gap-5"
+        className="grid min-h-0 flex-1 grid-cols-2 grid-rows-[repeat(2,minmax(0,1fr))] gap-4"
       >
         {PANELS.map((panel) => (
           <PanelTile key={panel.href} panel={panel} />
