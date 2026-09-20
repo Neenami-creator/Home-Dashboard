@@ -168,7 +168,8 @@ export default function HuePage() {
       )}
 
       {error && (
-        <div className="mb-4 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-sm text-red-300">
+        <div className="mb-4 flex items-center gap-2 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-[14px] text-[var(--text-secondary)]">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-400" />
           {error}
         </div>
       )}
@@ -199,7 +200,7 @@ export default function HuePage() {
       </motion.div>
 
       <div className="mt-8 flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-xs text-[var(--text-tertiary)]">
+        <span className="instrument-label flex items-center gap-1.5">
           <span
             className="h-1.5 w-1.5 rounded-full"
             style={{ backgroundColor: live ? "var(--accent-hue)" : "var(--border-strong)" }}
@@ -212,7 +213,7 @@ export default function HuePage() {
             clearBridgeConfig();
             setConfig(null);
           }}
-          className="text-xs text-[var(--text-tertiary)] underline underline-offset-2"
+          className="text-[12px] text-[var(--text-tertiary)] underline underline-offset-2 transition-colors hover:text-[var(--text-secondary)]"
         >
           Forget this bridge
         </button>

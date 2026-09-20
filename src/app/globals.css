@@ -164,14 +164,14 @@ textarea {
   top: -120px;
   border-radius: 50%;
   background: var(--accent, transparent);
-  opacity: 0.07;
+  opacity: var(--bloom-opacity, 0.07);
   filter: blur(70px);
   pointer-events: none;
   transition: opacity 400ms ease;
 }
 
 .control-surface[data-active="true"]::before {
-  opacity: 0.14;
+  opacity: var(--bloom-opacity, 0.14);
 }
 
 /* The recurring "precision line" signature: a short low-opacity accent
@@ -184,6 +184,24 @@ textarea {
   border-radius: 999px;
   background: var(--accent, var(--text-tertiary));
   opacity: 0.55;
+}
+
+/* Commissioning-screen text input shared by the Hue/Spotify "connect this
+   integration" forms - 52px tall, quiet border, accent-tinted focus ring. */
+.hue-input {
+  height: 52px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.hue-input:focus {
+  border-color: rgba(245, 201, 74, 0.55);
+  box-shadow: 0 0 0 3px rgba(245, 201, 74, 0.08);
 }
 
 @media (prefers-reduced-motion: reduce) {
