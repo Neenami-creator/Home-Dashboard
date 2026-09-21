@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { Music2 } from "lucide-react";
 import { ConnectSpotify } from "@/components/spotify/ConnectSpotify";
-import { Card } from "@/components/ui/Card";
 import { loadClientId } from "@/lib/spotify/config";
 import { disconnect, isConnected } from "@/lib/spotify/auth";
 
@@ -14,18 +13,22 @@ export function SpotifySettingsSection() {
 
   return (
     <section>
-      <h2 className="mb-3 flex items-center gap-2 text-lg font-medium">
-        <Music2 size={18} className="text-[var(--accent-spotify)]" />
-        Spotify
+      <h2 className="mb-3 flex items-center gap-2">
+        <Music2 size={16} strokeWidth={1.7} className="text-[var(--accent-spotify)]" />
+        <span className="instrument-label">Spotify</span>
       </h2>
       {connected && !editing ? (
-        <Card className="flex items-center justify-between p-5">
-          <p className="text-sm">Connected</p>
+        <div
+          className="control-surface flex items-center justify-between p-5"
+          style={{ "--accent": "var(--accent-spotify)" } as CSSProperties}
+          data-active
+        >
+          <p className="text-[15px]">Connected</p>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs text-[var(--text-secondary)] hover:bg-[var(--surface-hover)]"
+              className="rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)]"
             >
               Change
             </button>
@@ -35,12 +38,12 @@ export function SpotifySettingsSection() {
                 disconnect();
                 setConnected(false);
               }}
-              className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs text-[var(--text-secondary)] hover:bg-[var(--surface-hover)]"
+              className="rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)]"
             >
               Disconnect
             </button>
           </div>
-        </Card>
+        </div>
       ) : (
         <ConnectSpotify initialClientId={clientId} />
       )}

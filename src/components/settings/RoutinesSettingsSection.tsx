@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Sparkles, Trash2 } from "lucide-react";
-import { Card } from "@/components/ui/Card";
 import { loadBridgeConfig } from "@/lib/hue/config";
 import { fetchRoomStates, fetchScenes } from "@/lib/hue/client";
 import { loadRoutines, saveRoutines, addRoutine, removeRoutine } from "@/lib/routines/storage";
@@ -67,50 +66,50 @@ export function RoutinesSettingsSection() {
 
   return (
     <section>
-      <h2 className="mb-1 flex items-center gap-2 text-lg font-medium">
-        <Sparkles size={18} className="text-[var(--accent-hue)]" />
-        Routines
+      <h2 className="mb-1 flex items-center gap-2">
+        <Sparkles size={16} strokeWidth={1.7} className="text-[var(--accent-hue)]" />
+        <span className="instrument-label">Routines</span>
       </h2>
-      <p className="mb-3 text-sm text-[var(--text-secondary)]">
+      <p className="mb-3 text-[14px] text-[var(--text-secondary)]">
         One-tap shortcuts on the home screen. Assign a Hue scene per room for each routine, and
         optionally pause Spotify.
       </p>
 
       {rooms.length === 0 && (
-        <p className="mb-3 text-xs text-[var(--text-tertiary)]">
+        <p className="mb-3 text-[12px] text-[var(--text-tertiary)]">
           Connect a Hue bridge above to assign scenes to routines.
         </p>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {routines.map((routine) => {
           const Icon = ROUTINE_ICONS[routine.icon];
           return (
-            <Card key={routine.id} className="p-5">
+            <div key={routine.id} className="control-surface p-5">
               <div className="mb-3 flex items-center justify-between">
-                <span className="flex items-center gap-2 font-medium">
-                  <Icon size={16} className="text-[var(--text-secondary)]" />
+                <span className="flex items-center gap-2 text-[15px] font-medium">
+                  <Icon size={16} strokeWidth={1.7} className="text-[var(--text-secondary)]" />
                   {routine.name}
                 </span>
                 <button
                   type="button"
                   onClick={() => handleRemove(routine.id)}
                   aria-label={`Delete ${routine.name}`}
-                  className="text-[var(--text-tertiary)] hover:text-red-400"
+                  className="text-[var(--text-tertiary)] transition-colors hover:text-red-400"
                 >
-                  <Trash2 size={15} />
+                  <Trash2 size={15} strokeWidth={1.7} />
                 </button>
               </div>
 
               {rooms.length > 0 && (
                 <div className="space-y-2">
                   {rooms.map((room) => (
-                    <div key={room.id} className="flex items-center justify-between gap-3 text-sm">
+                    <div key={room.id} className="flex items-center justify-between gap-3 text-[14px]">
                       <span className="text-[var(--text-secondary)]">{room.name}</span>
                       <select
                         value={routine.sceneByRoom[room.id] ?? ""}
                         onChange={(e) => setRoomScene(routine.id, room.id, e.target.value)}
-                        className="rounded-lg border border-[var(--border)] bg-black/30 px-2 py-1 text-sm text-[var(--foreground)]"
+                        className="h-9 rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] px-2 text-[13px] text-[var(--foreground)] outline-none transition-colors focus:border-[var(--border-strong)]"
                       >
                         <option value="">No change</option>
                         {scenes
@@ -126,15 +125,16 @@ export function RoutinesSettingsSection() {
                 </div>
               )}
 
-              <label className="mt-3 flex items-center gap-2 text-sm text-[var(--text-secondary)]">
+              <label className="mt-3 flex items-center gap-2 text-[14px] text-[var(--text-secondary)]">
                 <input
                   type="checkbox"
                   checked={routine.pauseSpotify}
                   onChange={(e) => setPauseSpotify(routine.id, e.target.checked)}
+                  className="accent-[var(--foreground)]"
                 />
                 Also pause Spotify
               </label>
-            </Card>
+            </div>
           );
         })}
       </div>
@@ -144,12 +144,12 @@ export function RoutinesSettingsSection() {
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           placeholder="New routine name"
-          className="flex-1 rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+          className="h-11 flex-1 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[var(--border-strong)]"
         />
         <button
           type="button"
           onClick={handleAdd}
-          className="rounded-lg border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-hover)]"
+          className="h-11 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-4 text-[14px] text-[var(--text-secondary)] shadow-[inset_0_1px_0_var(--inset-highlight)] transition-colors hover:border-[var(--border-strong)]"
         >
           Add
         </button>

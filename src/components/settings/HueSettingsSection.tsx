@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { Lightbulb } from "lucide-react";
 import { BridgeSettings } from "@/components/hue/BridgeSettings";
 import { loadBridgeConfig, saveBridgeConfig, clearBridgeConfig } from "@/lib/hue/config";
-import { Card } from "@/components/ui/Card";
 
 export function HueSettingsSection() {
   const [config, setConfig] = useState(loadBridgeConfig());
@@ -12,21 +11,25 @@ export function HueSettingsSection() {
 
   return (
     <section>
-      <h2 className="mb-3 flex items-center gap-2 text-lg font-medium">
-        <Lightbulb size={18} className="text-[var(--accent-hue)]" />
-        Hue
+      <h2 className="mb-3 flex items-center gap-2">
+        <Lightbulb size={16} strokeWidth={1.7} className="text-[var(--accent-hue)]" />
+        <span className="instrument-label">Hue</span>
       </h2>
       {config && !editing ? (
-        <Card className="flex items-center justify-between p-5">
+        <div
+          className="control-surface flex items-center justify-between p-5"
+          style={{ "--accent": "var(--accent-hue)" } as CSSProperties}
+          data-active
+        >
           <div>
-            <p className="text-sm">Connected to bridge</p>
-            <p className="text-xs text-[var(--text-tertiary)]">{config.ip}</p>
+            <p className="text-[15px]">Connected to bridge</p>
+            <p className="text-[12px] text-[var(--text-tertiary)]">{config.ip}</p>
           </div>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs text-[var(--text-secondary)] hover:bg-[var(--surface-hover)]"
+              className="rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)]"
             >
               Change
             </button>
@@ -36,12 +39,12 @@ export function HueSettingsSection() {
                 clearBridgeConfig();
                 setConfig(null);
               }}
-              className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs text-[var(--text-secondary)] hover:bg-[var(--surface-hover)]"
+              className="rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)]"
             >
               Forget
             </button>
           </div>
-        </Card>
+        </div>
       ) : (
         <BridgeSettings
           initial={config}
