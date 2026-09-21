@@ -220,6 +220,22 @@ textarea {
   box-shadow: 0 0 0 3px rgba(47, 226, 114, 0.08);
 }
 
+.weather-input {
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.weather-input:focus {
+  border-color: rgba(87, 178, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(87, 178, 255, 0.08);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in {
     animation: none;

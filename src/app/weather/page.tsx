@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import { PanelShell } from "@/components/PanelShell";
 import { CitySelector } from "@/components/weather/CitySelector";
 import { AddCityForm } from "@/components/weather/AddCityForm";
@@ -46,6 +46,9 @@ export default function WeatherPage() {
       setStaleSince(null);
       saveCache(`weather-${city.id}`, result);
     } catch (err) {
+      // The wall UI never shows raw fetch/HTTP detail (see render below) -
+      // that detail is only useful for debugging, so it goes to the console.
+      console.error("Weather refresh failed:", err);
       setError(err instanceof Error ? err.message : "Couldn't load the weather.");
       // Cold load with no data yet for this city - fall back to whatever we
       // last knew rather than showing nothing.
@@ -106,27 +109,52 @@ export default function WeatherPage() {
         </div>
       )}
 
-      {error && (
-        <div className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-center text-sm text-red-300">
-          {error}
-        </div>
-      )}
-
-      {weather?.warnings.map((warning) => (
-        <p key={warning} className="mb-2 text-center text-xs text-amber-300/70">
-          {warning}
-        </p>
-      ))}
-
       {!weather && !error && <p className="text-center text-[var(--text-secondary)]">Loading weather…</p>}
 
-      {weather?.current && (
-        <div className="mb-8">
-          <ConditionsCard current={weather.current} />
+      {(!weather?.current && (error || weather)) && (
+        <div
+          className="control-surface mx-auto flex max-w-md flex-col items-center gap-1.5 p-8 text-center"
+          style={{ "--accent": "var(--accent-weather)" } as CSSProperties}
+        >
+          <span className="instrument-label flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--text-tertiary)]" />
+            Offline
+          </span>
+          <p className="font-display mt-2 text-[22px] font-normal">Weather unavailable</p>
+          <p className="mt-1 text-[14px] text-[var(--text-secondary)]">
+            The {selectedCity?.name ?? "selected"} forecast could not be refreshed right now.
+          </p>
         </div>
       )}
 
-      {weather && <ForecastStrip forecast={weather.forecast} />}
+      {weather?.current && weather.warnings.length > 0 && (
+        <p className="mb-4 text-center text-[12px] text-[var(--text-tertiary)]">{weather.warnings[0]}</p>
+      )}
+
+      {weather?.current && (
+        <div
+          className="control-surface relative overflow-hidden p-10 sm:p-12"
+          style={{ "--accent": "var(--accent-weather)" } as CSSProperties}
+          data-active
+        >
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-[400px]"
+            style={{
+              background: "radial-gradient(700px 400px at 50% 0%, rgba(87, 178, 255, 0.07), transparent 75%)",
+            }}
+          />
+          <div className="relative">
+            <ConditionsCard
+              current={weather.current}
+              cityName={selectedCity?.name ?? ""}
+              today={weather.forecast[0]}
+            />
+            <div className="mt-8 border-t border-[var(--border)] pt-6">
+              <ForecastStrip forecast={weather.forecast} />
+            </div>
+          </div>
+        </div>
+      )}
 
       {selectedCity?.radarId && (
         <div className="mt-8">
