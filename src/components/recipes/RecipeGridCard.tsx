@@ -6,11 +6,8 @@ import { recipePhotoUrl } from "@/lib/supabase/client";
 
 export function RecipeGridCard({ recipe }: { recipe: Recipe }) {
   return (
-    <Link
-      href={`/recipes/${recipe.id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] transition hover:border-[var(--border-strong)] hover:bg-[var(--surface-hover)]"
-    >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--surface-hover)]">
+    <Link href={`/recipes/${recipe.id}`} className="group flex flex-col">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[14px] bg-[var(--surface-2)]">
         {recipe.photo_path ? (
           <Image
             src={recipePhotoUrl(recipe.photo_path)}
@@ -21,23 +18,18 @@ export function RecipeGridCard({ recipe }: { recipe: Recipe }) {
           />
         ) : (
           <div className="flex h-full items-center justify-center text-[var(--text-tertiary)]">
-            <ChefHat size={32} />
+            <ChefHat size={28} strokeWidth={1.6} />
           </div>
         )}
       </div>
-      <div className="p-4">
-        <p className="font-medium">{recipe.title}</p>
+      <div className="pt-3">
+        <p className="font-display text-[19px] font-normal leading-snug transition-colors group-hover:text-[var(--accent-recipes)]">
+          {recipe.title}
+        </p>
         {recipe.tags.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {recipe.tags.slice(0, 3).map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-[var(--border)] px-2 py-0.5 text-xs text-[var(--text-secondary)]"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          <p className="mt-1 truncate text-[14px] text-[var(--text-secondary)]">
+            {recipe.tags.slice(0, 3).join(" · ")}
+          </p>
         )}
       </div>
     </Link>

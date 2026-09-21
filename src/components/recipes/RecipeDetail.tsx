@@ -38,7 +38,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   return (
     <article className="mx-auto max-w-4xl">
       {recipe.photo_path && (
-        <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-2xl">
+        <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-[14px]">
           <Image
             src={recipePhotoUrl(recipe.photo_path)}
             alt={recipe.title}
@@ -49,23 +49,17 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
         </div>
       )}
 
-      <h1 className="font-display text-3xl font-semibold">{recipe.title}</h1>
+      <h1 className="font-display text-[32px] font-normal leading-tight">{recipe.title}</h1>
 
       {recipe.tags.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-2">
-          {recipe.tags.map((tag) => (
-            <span key={tag} className="rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--text-secondary)]">
-              {tag}
-            </span>
-          ))}
-        </div>
+        <p className="mt-2 text-[14px] text-[var(--text-secondary)]">{recipe.tags.join(" · ")}</p>
       )}
 
-      <div className="mt-6 grid grid-cols-2 gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:grid-cols-5">
+      <div className="control-surface mt-6 grid grid-cols-2 gap-4 p-5 sm:grid-cols-5">
         {STATS.filter((stat) => recipe[stat.key]).map((stat) => (
           <div key={stat.key} className="text-center">
-            <p className="text-xs uppercase tracking-wide text-[var(--text-tertiary)]">{stat.label}</p>
-            <p className="mt-1 text-sm">{recipe[stat.key] as string}</p>
+            <p className="instrument-label">{stat.label}</p>
+            <p className="font-display mt-1 text-[17px]">{recipe[stat.key] as string}</p>
           </div>
         ))}
       </div>
@@ -73,14 +67,14 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
       <div className="mt-10 grid gap-10 sm:grid-cols-[1fr_1.5fr]">
         <div>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-medium">Ingredients</h2>
-            <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
+            <h2 className="font-display text-[19px] font-normal">Ingredients</h2>
+            <div className="flex items-center gap-2 text-[14px] text-[var(--text-secondary)]">
               <IconButton size="sm" onClick={() => setServings((s) => Math.max(1, s - 1))} aria-label="Fewer servings">
-                <Minus size={14} />
+                <Minus size={14} strokeWidth={1.8} />
               </IconButton>
               <span className="tabular-nums">{servings} servings</span>
               <IconButton size="sm" onClick={() => setServings((s) => s + 1)} aria-label="More servings">
-                <Plus size={14} />
+                <Plus size={14} strokeWidth={1.8} />
               </IconButton>
             </div>
           </div>
@@ -92,10 +86,10 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                   <button
                     type="button"
                     onClick={() => toggleIngredient(i)}
-                    className="flex w-full items-center gap-3 rounded-lg border-b border-[var(--border)] py-2 text-left text-sm transition hover:bg-[var(--surface-hover)]"
+                    className="flex w-full items-center gap-3 rounded-[10px] border-b border-[var(--border)] py-2 text-left text-[15px] transition-colors hover:bg-[var(--surface-2)]"
                   >
                     <span
-                      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition"
+                      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors"
                       style={{
                         borderColor: checked ? "var(--accent-recipes)" : "var(--border-strong)",
                         backgroundColor: checked ? "var(--accent-recipes)" : "transparent",
@@ -121,11 +115,11 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
         </div>
 
         <div>
-          <h2 className="mb-3 text-lg font-medium">Method</h2>
+          <h2 className="font-display mb-3 text-[19px] font-normal">Method</h2>
           <ol className="space-y-3">
             {recipe.method.map((step, i) => (
-              <li key={i} className="flex gap-3 text-sm text-[var(--foreground)]">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--surface-hover)] text-xs text-[var(--text-secondary)]">
+              <li key={i} className="flex gap-3 text-[15px] text-[var(--foreground)]">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-2)] text-[12px] text-[var(--text-secondary)]">
                   {i + 1}
                 </span>
                 <span>{step}</span>
@@ -136,8 +130,8 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
       </div>
 
       {recipe.note && (
-        <div className="mt-8 flex gap-3 rounded-xl border border-amber-300/30 bg-amber-300/10 p-4 text-sm text-amber-100">
-          <StickyNote size={16} className="mt-0.5 shrink-0" />
+        <div className="control-surface mt-8 flex gap-3 p-4 text-[14px] text-[var(--text-secondary)]">
+          <StickyNote size={16} strokeWidth={1.7} className="mt-0.5 shrink-0 text-[var(--accent-recipes)]" />
           <p>{recipe.note}</p>
         </div>
       )}

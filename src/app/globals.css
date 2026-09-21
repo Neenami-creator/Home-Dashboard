@@ -236,6 +236,38 @@ textarea {
   box-shadow: 0 0 0 3px rgba(87, 178, 255, 0.08);
 }
 
+.recipes-input {
+  height: 52px;
+  padding: 0 18px;
+  border-radius: 15px;
+  font-size: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.recipes-input:focus {
+  border-color: rgba(255, 145, 102, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 145, 102, 0.08);
+}
+
+/* Recipe-card skeleton shimmer while the library loads - extremely low
+   contrast, per the redesign brief ("never leave a mostly empty screen"). */
+@keyframes skeleton-shimmer {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.skeleton-pulse {
+  animation: skeleton-shimmer 1.7s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in {
     animation: none;
@@ -243,5 +275,9 @@ textarea {
 
   .control-surface {
     transition: none;
+  }
+
+  .skeleton-pulse {
+    animation: none;
   }
 }

@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { PanelShell } from "@/components/PanelShell";
 import { RecipeGridCard } from "@/components/recipes/RecipeGridCard";
+import { RecipeCardSkeleton } from "@/components/recipes/RecipeCardSkeleton";
 import { fetchRecipes, searchRecipes } from "@/lib/recipes/queries";
 import type { Recipe } from "@/lib/recipes/types";
 
@@ -22,28 +24,43 @@ export default function RecipesPage() {
 
   return (
     <PanelShell title="Recipes" accent="var(--accent-recipes)">
-      <div className="mb-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by title, tag or ingredient…"
-          className="w-full max-w-sm rounded-full border border-[var(--border)] bg-black/30 px-4 py-2 text-white sm:w-80"
-        />
+      <div className="mb-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+        <div className="relative w-full sm:w-[380px]">
+          <Search
+            size={16}
+            strokeWidth={1.7}
+            className="pointer-events-none absolute left-[18px] top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
+          />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by title, tag or ingredient…"
+            className="recipes-input w-full pl-[46px] text-[var(--foreground)]"
+          />
+        </div>
         <Link
           href="/recipes/upload"
-          className="rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)] transition hover:bg-[var(--surface-hover)]"
+          className="flex h-[52px] items-center gap-2 rounded-[13px] border border-[var(--border)] bg-[var(--surface-2)] px-5 text-[14px] font-medium text-[var(--text-secondary)] shadow-[inset_0_1px_0_var(--inset-highlight)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--accent-recipes)]"
         >
-          + Add recipe
+          <Plus size={16} strokeWidth={1.8} />
+          Add recipe
         </Link>
       </div>
 
       {error && (
-        <div className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-center text-sm text-red-300">
+        <div className="mb-6 flex items-center justify-center gap-2 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-center text-[14px] text-[var(--text-secondary)]">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-400" />
           {error}
         </div>
       )}
 
-      {!recipes && !error && <p className="text-center text-[var(--text-secondary)]">Loading recipes…</p>}
+      {!recipes && !error && (
+        <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <RecipeCardSkeleton key={i} />
+          ))}
+        </div>
+      )}
 
       {recipes && visible.length === 0 && (
         <p className="text-center text-[var(--text-secondary)]">
@@ -51,7 +68,7 @@ export default function RecipesPage() {
         </p>
       )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
         {visible.map((recipe) => (
           <RecipeGridCard key={recipe.id} recipe={recipe} />
         ))}

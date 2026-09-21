@@ -101,7 +101,7 @@ export default function UploadRecipePage() {
             value={passcode}
             onChange={(e) => setPasscode(e.target.value)}
             required
-            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+            className="recipes-input mt-1.5 block w-full text-[var(--foreground)]"
           />
         </label>
 
@@ -111,7 +111,7 @@ export default function UploadRecipePage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+            className="recipes-input mt-1.5 block w-full text-[var(--foreground)]"
           />
         </label>
 
@@ -121,7 +121,7 @@ export default function UploadRecipePage() {
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             placeholder="baking, weeknight, vegetarian"
-            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+            className="recipes-input mt-1.5 block w-full text-[var(--foreground)]"
           />
         </label>
 
@@ -133,7 +133,7 @@ export default function UploadRecipePage() {
               min={1}
               value={servings}
               onChange={(e) => setServings(Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+              className="recipes-input mt-1.5 block w-full text-[var(--foreground)]"
             />
           </label>
           <label className="block text-sm text-[var(--text-secondary)]">
@@ -142,7 +142,7 @@ export default function UploadRecipePage() {
               value={yieldText}
               onChange={(e) => setYieldText(e.target.value)}
               placeholder="1 loaf"
-              className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+              className="recipes-input mt-1.5 block w-full text-[var(--foreground)]"
             />
           </label>
           <label className="block text-sm text-[var(--text-secondary)]">
@@ -151,7 +151,7 @@ export default function UploadRecipePage() {
               value={ovenTemp}
               onChange={(e) => setOvenTemp(e.target.value)}
               placeholder="200°C"
-              className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+              className="recipes-input mt-1.5 block w-full text-[var(--foreground)]"
             />
           </label>
           <label className="block text-sm text-[var(--text-secondary)]">
@@ -160,7 +160,7 @@ export default function UploadRecipePage() {
               value={prepTime}
               onChange={(e) => setPrepTime(e.target.value)}
               placeholder="15 min"
-              className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+              className="recipes-input mt-1.5 block w-full text-[var(--foreground)]"
             />
           </label>
           <label className="block text-sm text-[var(--text-secondary)]">
@@ -169,7 +169,7 @@ export default function UploadRecipePage() {
               value={riseTime}
               onChange={(e) => setRiseTime(e.target.value)}
               placeholder="1 hour"
-              className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+              className="recipes-input mt-1.5 block w-full text-[var(--foreground)]"
             />
           </label>
           <label className="block text-sm text-[var(--text-secondary)]">
@@ -178,7 +178,7 @@ export default function UploadRecipePage() {
               value={cookTime}
               onChange={(e) => setCookTime(e.target.value)}
               placeholder="30 min"
-              className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+              className="recipes-input mt-1.5 block w-full text-[var(--foreground)]"
             />
           </label>
         </div>
@@ -201,19 +201,19 @@ export default function UploadRecipePage() {
                   value={ing.item}
                   onChange={(e) => updateIngredient(i, { item: e.target.value })}
                   placeholder="Item"
-                  className="rounded-lg border border-[var(--border)] bg-black/30 px-2 py-1.5 text-sm text-[var(--foreground)]"
+                  className="h-11 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)]"
                 />
                 <input
                   value={ing.amount}
                   onChange={(e) => updateIngredient(i, { amount: e.target.value })}
                   placeholder="Amount"
-                  className="rounded-lg border border-[var(--border)] bg-black/30 px-2 py-1.5 text-sm text-[var(--foreground)]"
+                  className="h-11 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)]"
                 />
                 <input
                   value={ing.unit}
                   onChange={(e) => updateIngredient(i, { unit: e.target.value })}
                   placeholder="Unit"
-                  className="rounded-lg border border-[var(--border)] bg-black/30 px-2 py-1.5 text-sm text-[var(--foreground)]"
+                  className="h-11 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)]"
                 />
                 <button
                   type="button"
@@ -247,7 +247,7 @@ export default function UploadRecipePage() {
                   value={step}
                   onChange={(e) => updateStep(i, e.target.value)}
                   rows={2}
-                  className="flex-1 rounded-lg border border-[var(--border)] bg-black/30 px-2 py-1.5 text-sm text-[var(--foreground)]"
+                  className="flex-1 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)]"
                 />
                 <button
                   type="button"
@@ -268,7 +268,7 @@ export default function UploadRecipePage() {
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={2}
-            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+            className="recipes-input mt-1.5 block w-full text-[var(--foreground)]"
           />
         </label>
 
@@ -282,12 +282,16 @@ export default function UploadRecipePage() {
           />
         </label>
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && <p className="text-[14px] text-red-400">{error}</p>}
 
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-lg bg-[#ff8a5c] py-2 font-medium text-black disabled:opacity-50"
+          className="h-[52px] w-full rounded-[13px] text-[16px] font-medium text-black transition disabled:opacity-50"
+          style={{
+            background: "var(--accent-recipes)",
+            boxShadow: "0 0 24px -6px color-mix(in srgb, var(--accent-recipes) 55%, transparent)",
+          }}
         >
           {submitting ? "Saving…" : "Save recipe"}
         </button>
