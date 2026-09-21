@@ -31,19 +31,16 @@ export function DevicePicker({
           type="button"
           disabled={busy || !device.id || device.is_active}
           onClick={() => device.id && onSelect(device.id)}
-          className="flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition hover:bg-[var(--surface-hover)] disabled:opacity-60"
+          className="flex items-center gap-2 rounded-[12px] border bg-[var(--surface-2)] px-4 py-2 text-[13px] shadow-[inset_0_1px_0_var(--inset-highlight)] transition-colors hover:border-[var(--border-strong)] disabled:opacity-60"
           style={
             device.is_active
-              ? {
-                  borderColor: `color-mix(in srgb, ${ACCENT} 45%, transparent)`,
-                  backgroundColor: `color-mix(in srgb, ${ACCENT} 12%, transparent)`,
-                  color: ACCENT,
-                }
+              ? { borderColor: "var(--border)", color: ACCENT }
               : { borderColor: "var(--border)", color: "var(--text-secondary)" }
           }
         >
-          <Speaker size={14} />
+          <Speaker size={14} strokeWidth={1.7} />
           {device.name}
+          {device.is_active && <span className="h-[5px] w-[5px] rounded-full" style={{ backgroundColor: ACCENT }} />}
         </button>
       ))}
     </div>

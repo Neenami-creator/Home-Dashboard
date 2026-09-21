@@ -204,6 +204,22 @@ textarea {
   box-shadow: 0 0 0 3px rgba(245, 201, 74, 0.08);
 }
 
+.spotify-input {
+  height: 52px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.spotify-input:focus {
+  border-color: rgba(47, 226, 114, 0.5);
+  box-shadow: 0 0 0 3px rgba(47, 226, 114, 0.08);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in {
     animation: none;
