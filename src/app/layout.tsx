@@ -3,6 +3,7 @@ import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import { IdleScreensaver } from "@/components/IdleScreensaver";
 import { TimeOfDayTheme } from "@/components/TimeOfDayTheme";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
+import { MotionProvider } from "@/components/MotionProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -61,7 +62,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <ServiceWorkerRegistration />
         <TimeOfDayTheme />
-        <IdleScreensaver>{children}</IdleScreensaver>
+        <MotionProvider>
+          <IdleScreensaver>{children}</IdleScreensaver>
+        </MotionProvider>
       </body>
     </html>
   );

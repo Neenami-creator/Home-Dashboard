@@ -201,19 +201,19 @@ export default function UploadRecipePage() {
                   value={ing.item}
                   onChange={(e) => updateIngredient(i, { item: e.target.value })}
                   placeholder="Item"
-                  className="h-11 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)]"
+                  className="h-11 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)] focus:ring-2 focus:ring-[rgba(255,145,102,0.15)]"
                 />
                 <input
                   value={ing.amount}
                   onChange={(e) => updateIngredient(i, { amount: e.target.value })}
                   placeholder="Amount"
-                  className="h-11 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)]"
+                  className="h-11 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)] focus:ring-2 focus:ring-[rgba(255,145,102,0.15)]"
                 />
                 <input
                   value={ing.unit}
                   onChange={(e) => updateIngredient(i, { unit: e.target.value })}
                   placeholder="Unit"
-                  className="h-11 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)]"
+                  className="h-11 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)] focus:ring-2 focus:ring-[rgba(255,145,102,0.15)]"
                 />
                 <button
                   type="button"
@@ -247,7 +247,7 @@ export default function UploadRecipePage() {
                   value={step}
                   onChange={(e) => updateStep(i, e.target.value)}
                   rows={2}
-                  className="flex-1 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)]"
+                  className="flex-1 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[rgba(255,145,102,0.5)] focus:ring-2 focus:ring-[rgba(255,145,102,0.15)]"
                 />
                 <button
                   type="button"

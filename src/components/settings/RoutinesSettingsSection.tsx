@@ -109,7 +109,7 @@ export function RoutinesSettingsSection() {
                       <select
                         value={routine.sceneByRoom[room.id] ?? ""}
                         onChange={(e) => setRoomScene(routine.id, room.id, e.target.value)}
-                        className="h-9 rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] px-2 text-[13px] text-[var(--foreground)] outline-none transition-colors focus:border-[var(--border-strong)]"
+                        className="h-9 rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] px-2 text-[13px] text-[var(--foreground)] outline-none transition-colors focus:border-[var(--border-strong)] focus:ring-2 focus:ring-white/10"
                       >
                         <option value="">No change</option>
                         {scenes
@@ -144,7 +144,7 @@ export function RoutinesSettingsSection() {
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           placeholder="New routine name"
-          className="h-11 flex-1 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[var(--border-strong)]"
+          className="h-11 flex-1 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[14px] text-[var(--foreground)] outline-none transition-colors focus:border-[var(--border-strong)] focus:ring-2 focus:ring-white/10"
         />
         <button
           type="button"
