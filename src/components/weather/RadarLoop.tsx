@@ -46,19 +46,19 @@ export function RadarLoop({ radarId }: { radarId: string }) {
     <div className="mx-auto max-w-md">
       <div className="relative aspect-square overflow-hidden rounded-[18px] border border-[var(--border)] bg-black/40">
         {/* eslint-disable-next-line @next/next/no-img-element -- external BOM imagery, not a local/optimizable asset */}
-        <img src={data.background} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <img src={data.background} alt="" className="absolute top-0 right-0 bottom-0 left-0 h-full w-full object-cover" />
         {data.frames[frameIndex] && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={data.frames[frameIndex]}
             alt="Rain radar"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute top-0 right-0 bottom-0 left-0 h-full w-full object-cover"
           />
         )}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={data.locations} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <img src={data.locations} alt="" className="absolute top-0 right-0 bottom-0 left-0 h-full w-full object-cover" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={data.range} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <img src={data.range} alt="" className="absolute top-0 right-0 bottom-0 left-0 h-full w-full object-cover" />
       </div>
 
       <div className="mt-3 flex items-center justify-center gap-3">

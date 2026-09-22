@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { PanelShell } from "@/components/PanelShell";
 import { compressImage } from "@/lib/recipes/compressImage";
+import { mixWithTransparent } from "@/lib/colorMix";
 import type { Ingredient } from "@/lib/recipes/types";
 
 const PASSCODE_STORAGE_KEY = "recipe-upload-passcode";
@@ -290,7 +291,7 @@ export default function UploadRecipePage() {
           className="h-[52px] w-full rounded-[13px] text-[16px] font-medium text-black transition disabled:opacity-50"
           style={{
             background: "var(--accent-recipes)",
-            boxShadow: "0 0 24px -6px color-mix(in srgb, var(--accent-recipes) 55%, transparent)",
+            boxShadow: `0 0 24px -6px ${mixWithTransparent("var(--accent-recipes)", 55)}`,
           }}
         >
           {submitting ? "Saving…" : "Save recipe"}

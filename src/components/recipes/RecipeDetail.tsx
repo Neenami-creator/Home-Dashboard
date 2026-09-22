@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { Check, Minus, Plus, StickyNote } from "lucide-react";
 import type { Recipe } from "@/lib/recipes/types";
 import { recipePhotoUrl } from "@/lib/supabase/client";
@@ -38,7 +38,10 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   return (
     <article className="mx-auto max-w-4xl">
       {recipe.photo_path && (
-        <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-[14px]">
+        <div
+          className="aspect-ratio-fallback relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-[14px]"
+          style={{ "--ratio-padding": "56.25%" } as CSSProperties}
+        >
           <Image
             src={recipePhotoUrl(recipe.photo_path)}
             alt={recipe.title}
