@@ -74,7 +74,7 @@ export function IdleScreensaver({ children }: { children: ReactNode }) {
     <>
       {children}
       {idle && (
-        <div className="animate-fade-in fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-[var(--background)]">
+        <div className="animate-fade-in fixed top-0 right-0 bottom-0 left-0 z-50 flex flex-col items-center justify-center gap-8 bg-[var(--background)]">
           <Clock className="[&_p:first-child]:text-center [&_p:first-child]:text-8xl [&_p:first-child]:font-semibold [&_p:last-child]:mt-2 [&_p:last-child]:text-center [&_p:last-child]:text-lg" />
           {conditions?.airTempC != null && (
             <div className="flex items-center gap-3 text-2xl text-[var(--text-secondary)]">

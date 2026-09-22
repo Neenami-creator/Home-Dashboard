@@ -66,7 +66,7 @@ export function NowPlayingCard({
           restrained so it reads as atmosphere rather than a busy background. */}
       {artwork && (
         <div
-          className="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.08]"
+          className="pointer-events-none absolute top-0 right-0 bottom-0 left-0 overflow-hidden opacity-[0.08]"
           style={{
             backgroundImage: `url(${artwork})`,
             backgroundSize: "cover",

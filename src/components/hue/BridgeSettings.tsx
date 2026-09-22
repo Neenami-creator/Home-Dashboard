@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { BridgeConfig } from "@/lib/hue/types";
 import { testBridgeConnection, HueBridgeError } from "@/lib/hue/client";
+import { mixWithTransparent } from "@/lib/colorMix";
 
 export function BridgeSettings({
   initial,
@@ -71,7 +72,7 @@ export function BridgeSettings({
           className="mt-1 h-[52px] rounded-[13px] text-[16px] font-medium text-black transition disabled:opacity-50"
           style={{
             background: "var(--accent-hue)",
-            boxShadow: "0 0 24px -6px color-mix(in srgb, var(--accent-hue) 55%, transparent)",
+            boxShadow: `0 0 24px -6px ${mixWithTransparent("var(--accent-hue)", 55)}`,
           }}
         >
           {status === "testing" ? "Connecting…" : "Connect"}

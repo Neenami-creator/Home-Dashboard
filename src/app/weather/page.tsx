@@ -138,7 +138,7 @@ export default function WeatherPage() {
           data-active
         >
           <div
-            className="pointer-events-none absolute inset-x-0 top-0 h-[400px]"
+            className="pointer-events-none absolute top-0 right-0 left-0 h-[400px]"
             style={{
               background: "radial-gradient(700px 400px at 50% 0%, rgba(87, 178, 255, 0.07), transparent 75%)",
             }}

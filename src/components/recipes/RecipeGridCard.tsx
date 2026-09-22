@@ -1,13 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChefHat } from "lucide-react";
+import type { CSSProperties } from "react";
 import type { Recipe } from "@/lib/recipes/types";
 import { recipePhotoUrl } from "@/lib/supabase/client";
 
 export function RecipeGridCard({ recipe }: { recipe: Recipe }) {
   return (
     <Link href={`/recipes/${recipe.id}`} className="group flex flex-col">
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[14px] bg-[var(--surface-2)]">
+      <div
+        className="aspect-ratio-fallback relative aspect-[4/3] w-full overflow-hidden rounded-[14px] bg-[var(--surface-2)]"
+        style={{ "--ratio-padding": "75%" } as CSSProperties}
+      >
         {recipe.photo_path ? (
           <Image
             src={recipePhotoUrl(recipe.photo_path)}
