@@ -1,12 +1,12 @@
-// A minimal "app shell" service worker: enough that total WiFi loss shows
-// this app's own last-known-state UI (see src/lib/cache.ts) instead of the
-// browser's own offline error page, without needing a build-time precache
-// manifest that would go stale across deploys (Next's chunk hashes change
-// every build). Deliberately does NOT touch API routes or cross-origin
-// requests (Hue bridge, BOM, Spotify, Supabase) - those should always hit
-// the network live, and this app's own panels already degrade gracefully
-// when they fail.
-const RUNTIME_CACHE = "home-dashboard-runtime-v1";
+// A minimal "app shell" service worker for static assets only. Deliberately
+// does NOT touch API routes, cross-origin requests (Hue bridge, BOM,
+// Spotify, Supabase), or navigations - the target hardware (an iPad mini 2
+// capped at iOS 12.5.7) has a known WebKit bug where cloning a
+// Brotli-compressed, chunked-transfer Response (exactly what a Vercel HTML
+// navigation response looks like) can abort the whole page load instead of
+// failing gracefully. Losing "last known state on total WiFi loss" for the
+// app shell itself is an acceptable tradeoff for the page actually loading.
+const RUNTIME_CACHE = "home-dashboard-runtime-v2";
 
 self.addEventListener("install", () => {
   self.skipWaiting();
@@ -28,19 +28,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith("/api/")) return;
-
-  if (request.mode === "navigate") {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
-          return response;
-        })
-        .catch(() => caches.match(request).then((cached) => cached || caches.match("/")))
-    );
-    return;
-  }
+  if (request.mode === "navigate") return;
 
   // Static assets (JS/CSS/fonts/icons): stale-while-revalidate, so the app
   // shell keeps working offline after the first successful visit while
