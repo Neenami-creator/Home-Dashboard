@@ -31,7 +31,7 @@ export function ForecastStrip({ forecast }: { forecast: ForecastDay[] }) {
       variants={gridVariants}
       initial="hidden"
       animate="visible"
-      className="mx-auto grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4"
+      className="mx-auto grid max-w-3xl grid-cols-2 divide-y divide-[var(--border)] sm:grid-cols-4 sm:divide-x sm:divide-y-0"
     >
       {forecast.slice(0, 4).map((day, index) => {
         // Selects among a fixed set of Lucide icon components; doesn't define a new one.
@@ -40,20 +40,17 @@ export function ForecastStrip({ forecast }: { forecast: ForecastDay[] }) {
           <motion.div
             key={day.date || index}
             variants={cardVariants}
-            className="flex flex-col items-center gap-1.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-center"
+            className="flex flex-col items-center gap-1.5 px-3 py-4 text-center"
           >
-            <span className="text-sm font-medium text-[var(--text-secondary)]">
-              {dayLabel(day.date, index)}
-            </span>
-            <Icon size={28} className="my-1 text-[var(--accent-weather)]" />
-            <span className="text-xs text-[var(--text-secondary)]">{day.precis || "—"}</span>
-            <span className="mt-1 text-lg">
-              {day.maxTempC !== null ? Math.round(day.maxTempC) : "—"}° /{" "}
-              {day.minTempC !== null ? Math.round(day.minTempC) : "—"}°
+            <span className="instrument-label">{dayLabel(day.date, index)}</span>
+            <Icon size={24} strokeWidth={1.6} className="my-1 text-[var(--accent-weather)]" />
+            <span className="text-[13px] text-[var(--text-secondary)]">{day.precis || "—"}</span>
+            <span className="font-display mt-1 text-[19px]">
+              {day.maxTempC !== null ? Math.round(day.maxTempC) : "—"}° / {day.minTempC !== null ? Math.round(day.minTempC) : "—"}°
             </span>
             {day.chanceOfRainPercent !== null && (
-              <span className="flex items-center gap-1 text-xs text-[var(--accent-weather)]">
-                <Droplets size={12} />
+              <span className="flex items-center gap-1 text-[12px] text-[var(--text-tertiary)]">
+                <Droplets size={12} strokeWidth={1.7} />
                 {day.chanceOfRainPercent}%
               </span>
             )}

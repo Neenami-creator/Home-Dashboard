@@ -8,27 +8,27 @@ export type AmbientTheme = {
 // only needs to feel "of the day," not track sunrise/sunset precisely, and
 // four fixed palettes are trivial to reason about and tune.
 const DAWN: AmbientTheme = {
-  glow1: "rgba(255, 176, 110, 0.10)",
-  glow2: "rgba(255, 138, 92, 0.06)",
-  glow3: "rgba(87, 178, 255, 0.04)",
+  glow1: "rgba(198, 158, 103, 0.05)",
+  glow2: "rgba(198, 158, 103, 0.035)",
+  glow3: "rgba(87, 178, 255, 0.02)",
 };
 
 const DAY: AmbientTheme = {
-  glow1: "rgba(245, 201, 74, 0.07)",
-  glow2: "rgba(87, 178, 255, 0.06)",
-  glow3: "rgba(47, 226, 114, 0.05)",
+  glow1: "rgba(125, 160, 174, 0.03)",
+  glow2: "rgba(125, 160, 174, 0.025)",
+  glow3: "rgba(47, 226, 114, 0.02)",
 };
 
 const EVENING: AmbientTheme = {
-  glow1: "rgba(255, 145, 102, 0.11)",
-  glow2: "rgba(245, 201, 74, 0.07)",
-  glow3: "rgba(87, 178, 255, 0.04)",
+  glow1: "rgba(174, 112, 65, 0.055)",
+  glow2: "rgba(174, 112, 65, 0.04)",
+  glow3: "rgba(87, 178, 255, 0.02)",
 };
 
 const NIGHT: AmbientTheme = {
-  glow1: "rgba(87, 120, 200, 0.05)",
-  glow2: "rgba(47, 226, 114, 0.025)",
-  glow3: "rgba(245, 201, 74, 0.02)",
+  glow1: "rgba(76, 85, 130, 0.035)",
+  glow2: "rgba(76, 85, 130, 0.025)",
+  glow3: "rgba(47, 226, 114, 0.012)",
 };
 
 export function ambientThemeForHour(hour: number): AmbientTheme {

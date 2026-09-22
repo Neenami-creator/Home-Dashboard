@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { Lightbulb, Palette, Sparkles } from "lucide-react";
 import type { HueRoomState, HueScene } from "@/lib/hue/types";
 import { HUE_COLOR_PRESETS } from "@/lib/hue/presets";
-import { Card } from "@/components/ui/Card";
 import { Toggle } from "@/components/ui/Toggle";
 
 const ACCENT = "var(--accent-hue)";
@@ -29,20 +28,26 @@ export function RoomTile({
   const [localBrightness, setLocalBrightness] = useState(room.brightness);
   const [showColors, setShowColors] = useState(false);
 
+  // The lit state reads as a local light source, not a coloured card fill:
+  // the accent bloom's opacity tracks brightness so a dim room glows faintly
+  // and a room at full brightness glows more, rather than one fixed wash.
+  const bloomOpacity = room.on ? 0.06 + (Math.max(1, room.brightness) / 100) * 0.1 : 0;
+
   return (
-    <Card glow={ACCENT} active={room.on} className="p-5">
+    <div
+      className="control-surface min-h-[150px] p-5"
+      data-active={room.on}
+      style={{ "--accent": ACCENT, "--bloom-opacity": bloomOpacity } as CSSProperties}
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div
-            className="flex h-10 w-10 items-center justify-center rounded-xl"
-            style={{
-              backgroundColor: room.on ? `color-mix(in srgb, ${ACCENT} 22%, transparent)` : "var(--surface-hover)",
-              color: room.on ? ACCENT : "var(--text-tertiary)",
-            }}
+            className="flex h-10 w-10 items-center justify-center rounded-[14px] border border-[var(--border)] bg-[var(--surface-2)] shadow-[inset_0_1px_0_var(--inset-highlight)]"
+            style={{ color: room.on ? ACCENT : "var(--text-tertiary)" }}
           >
-            <Lightbulb size={19} fill={room.on ? "currentColor" : "none"} />
+            <Lightbulb size={19} strokeWidth={1.6} fill={room.on ? "currentColor" : "none"} />
           </div>
-          <span className="text-lg font-medium">{room.name}</span>
+          <span className="text-[17px] font-medium">{room.name}</span>
         </div>
         <Toggle
           on={room.on}
@@ -65,13 +70,13 @@ export function RoomTile({
           className="w-full accent-current disabled:opacity-40"
           style={{ color: ACCENT }}
         />
-        <div className="mt-1 text-right text-xs text-[var(--text-tertiary)]">{localBrightness}%</div>
+        <div className="mt-1 text-right text-[12px] text-[var(--text-tertiary)]">{localBrightness}%</div>
       </div>
 
       {scenes.length > 0 && (
         <div className="mt-3">
-          <p className="mb-1.5 flex items-center gap-1.5 text-xs text-[var(--text-tertiary)]">
-            <Sparkles size={13} />
+          <p className="instrument-label mb-1.5 flex items-center gap-1.5">
+            <Sparkles size={12} />
             Scenes
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -81,7 +86,7 @@ export function RoomTile({
                 type="button"
                 disabled={busy}
                 onClick={() => onScene(scene.id)}
-                className="rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--text-secondary)] transition hover:border-[var(--border-strong)] hover:bg-[var(--surface-hover)] disabled:opacity-40"
+                className="rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-[13px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] disabled:opacity-40"
               >
                 {scene.name}
               </button>
@@ -93,7 +98,7 @@ export function RoomTile({
       <button
         type="button"
         onClick={() => setShowColors((v) => !v)}
-        className="mt-3 flex items-center gap-1.5 text-xs text-[var(--text-tertiary)] transition hover:text-[var(--text-secondary)]"
+        className="mt-3 flex items-center gap-1.5 text-[12px] text-[var(--text-tertiary)] transition-colors hover:text-[var(--text-secondary)]"
       >
         <Palette size={13} />
         {showColors ? "Hide colors" : "Quick colors"}
@@ -114,6 +119,6 @@ export function RoomTile({
           ))}
         </div>
       )}
-    </Card>
+    </div>
   );
 }

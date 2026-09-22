@@ -3,12 +3,17 @@
 import { motion, type HTMLMotionProps } from "motion/react";
 import type { ReactNode } from "react";
 
-type Size = "sm" | "md" | "lg";
+type Size = "sm" | "md" | "lg" | "control" | "play";
 
 const SIZES: Record<Size, string> = {
   sm: "h-9 w-9",
   md: "h-12 w-12",
   lg: "h-16 w-16",
+  // Spotify's secondary transport controls (44px) and the primary play/pause
+  // button (58px) per the redesign's touch-target spec - additive so other
+  // screens' existing sm/md/lg usage is unaffected.
+  control: "h-11 w-11",
+  play: "h-[58px] w-[58px]",
 };
 
 export function IconButton({

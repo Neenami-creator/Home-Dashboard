@@ -20,21 +20,25 @@ export function PanelShell({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="flex items-center justify-between gap-4 border-b border-[var(--border)] px-6 py-4">
+      <header className="flex h-[72px] items-center justify-between gap-4 border-b border-[var(--border)] px-8">
         <div className="flex items-center gap-3">
           <Link
             href="/"
             aria-label="Home"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)]"
+            className="flex h-10 w-10 items-center justify-center rounded-[14px] border border-[var(--border)] bg-[var(--surface-2)] text-[var(--text-secondary)] shadow-[inset_0_1px_0_var(--inset-highlight)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--foreground)]"
           >
-            <Home size={18} />
+            <Home size={17} strokeWidth={1.7} />
           </Link>
-          <h1 className="font-display text-xl font-semibold" style={{ color: accent }}>
+          <h1 className="font-display flex items-center gap-2 text-xl font-medium text-[var(--foreground)]">
             {title}
+            <span className="h-[5px] w-[5px] rounded-full" style={{ backgroundColor: accent }} />
           </h1>
         </div>
 
-        <nav className="hidden items-center gap-1 rounded-full border border-[var(--border)] p-1 sm:flex">
+        <nav
+          className="hidden items-center gap-1 rounded-[16px] border p-1 sm:flex"
+          style={{ height: 50, background: "rgba(255,255,255,0.018)", borderColor: "rgba(255,255,255,0.05)" }}
+        >
           {PANELS.map((panel) => {
             const isActive = pathname.startsWith(panel.href);
             const Icon = panel.icon;
@@ -43,28 +47,34 @@ export function PanelShell({
                 key={panel.href}
                 href={panel.href}
                 aria-label={panel.name}
-                className="flex h-9 w-9 items-center justify-center rounded-full transition"
+                className="relative flex h-[42px] w-[42px] items-center justify-center rounded-xl transition-colors"
                 style={
                   isActive
-                    ? { backgroundColor: `color-mix(in srgb, ${panel.accent} 18%, transparent)`, color: panel.accent }
+                    ? { background: "var(--surface-2)", color: panel.accent }
                     : { color: "var(--text-tertiary)" }
                 }
               >
-                <Icon size={17} />
+                <Icon size={19} strokeWidth={1.7} />
+                {isActive && (
+                  <span
+                    className="absolute bottom-1 h-[2px] w-3 rounded-full"
+                    style={{ backgroundColor: panel.accent }}
+                  />
+                )}
               </Link>
             );
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <Link
             href="/settings"
             aria-label="Settings"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--text-tertiary)] transition hover:bg-[var(--surface-hover)] hover:text-[var(--text-secondary)]"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--text-tertiary)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text-secondary)]"
           >
-            <Settings size={16} />
+            <Settings size={16} strokeWidth={1.7} />
           </Link>
-          <Clock />
+          <Clock className="[&_p:first-child]:text-[18px] [&_p:last-child]:text-[11px] [&_p:last-child]:tracking-[0.06em]" />
         </div>
       </header>
       <main className="flex-1 overflow-y-auto p-6">

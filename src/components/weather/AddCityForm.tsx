@@ -34,12 +34,9 @@ export function AddCityForm({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mx-auto mb-6 max-w-md rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6"
-    >
-      <h2 className="text-lg font-medium">Add a city</h2>
-      <p className="mt-1 text-sm text-[var(--text-secondary)]">
+    <form onSubmit={handleSubmit} className="control-surface mx-auto mb-6 max-w-md p-6">
+      <h2 className="font-display text-[19px] font-normal">Add a city</h2>
+      <p className="mt-1 text-[13px] text-[var(--text-secondary)]">
         BOM doesn&apos;t publish a lookup for these codes. Find them on{" "}
         <a
           href="http://www.bom.gov.au/places/"
@@ -53,67 +50,67 @@ export function AddCityForm({
         forecast pages, and copy the IDs out of the <code>.json</code> URLs.
       </p>
 
-      <label className="mt-4 block text-sm text-[var(--text-secondary)]">
+      <label className="mt-4 block text-[13px] text-[var(--text-secondary)]">
         Name
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Whyalla"
           required
-          className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+          className="weather-input mt-1.5 block w-full text-[var(--foreground)]"
         />
       </label>
 
       <div className="mt-3 grid grid-cols-2 gap-3">
-        <label className="block text-sm text-[var(--text-secondary)]">
+        <label className="block text-[13px] text-[var(--text-secondary)]">
           Observation product
           <input
             value={obsProduct}
             onChange={(e) => setObsProduct(e.target.value)}
             placeholder="IDS60901"
             required
-            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+            className="weather-input mt-1.5 block w-full text-[var(--foreground)]"
           />
         </label>
-        <label className="block text-sm text-[var(--text-secondary)]">
+        <label className="block text-[13px] text-[var(--text-secondary)]">
           Station number
           <input
             value={obsStation}
             onChange={(e) => setObsStation(e.target.value)}
             placeholder="94654"
             required
-            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+            className="weather-input mt-1.5 block w-full text-[var(--foreground)]"
           />
         </label>
-        <label className="block text-sm text-[var(--text-secondary)]">
+        <label className="block text-[13px] text-[var(--text-secondary)]">
           Forecast product
           <input
             value={fcProduct}
             onChange={(e) => setFcProduct(e.target.value)}
             placeholder="IDS10044"
             required
-            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+            className="weather-input mt-1.5 block w-full text-[var(--foreground)]"
           />
         </label>
-        <label className="block text-sm text-[var(--text-secondary)]">
+        <label className="block text-[13px] text-[var(--text-secondary)]">
           Forecast area code
           <input
             value={fcAac}
             onChange={(e) => setFcAac(e.target.value)}
             placeholder="SA_PW010"
             required
-            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+            className="weather-input mt-1.5 block w-full text-[var(--foreground)]"
           />
         </label>
       </div>
 
-      <label className="mt-3 block text-sm text-[var(--text-secondary)]">
+      <label className="mt-3 block text-[13px] text-[var(--text-secondary)]">
         Radar ID (optional)
         <input
           value={radarId}
           onChange={(e) => setRadarId(e.target.value)}
           placeholder="IDR643"
-          className="mt-1 w-full rounded-lg border border-[var(--border)] bg-black/30 px-3 py-2 text-[var(--foreground)]"
+          className="weather-input mt-1.5 block w-full text-[var(--foreground)]"
         />
       </label>
 
@@ -121,11 +118,15 @@ export function AddCityForm({
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 rounded-lg border border-[var(--border)] py-2 text-[var(--text-secondary)]"
+          className="flex-1 rounded-[12px] border border-[var(--border)] py-2.5 text-[14px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)]"
         >
           Cancel
         </button>
-        <button type="submit" className="flex-1 rounded-lg bg-[var(--accent-weather)] py-2 font-medium text-black">
+        <button
+          type="submit"
+          className="flex-1 rounded-[12px] py-2.5 text-[14px] font-medium text-black"
+          style={{ background: "var(--accent-weather)" }}
+        >
           Add
         </button>
       </div>

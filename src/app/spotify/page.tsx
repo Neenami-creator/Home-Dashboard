@@ -148,7 +148,8 @@ export default function SpotifyPage() {
       )}
 
       {error && (
-        <div className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-center text-sm text-red-300">
+        <div className="mb-6 flex items-center justify-center gap-2 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-center text-[14px] text-[var(--text-secondary)]">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-400" />
           {error}
         </div>
       )}
@@ -171,9 +172,7 @@ export default function SpotifyPage() {
       )}
 
       <div className="mt-10">
-        <h2 className="mb-3 text-center text-sm uppercase tracking-wide text-[var(--text-tertiary)]">
-          Devices
-        </h2>
+        <p className="instrument-label mb-3 text-center">Devices</p>
         <DevicePicker
           devices={devices}
           busy={busy}
@@ -190,7 +189,7 @@ export default function SpotifyPage() {
           setConnected(false);
           setPlayback(null);
         }}
-        className="mx-auto mt-8 block text-xs text-[var(--text-tertiary)] underline underline-offset-2"
+        className="mx-auto mt-8 block text-[12px] text-[var(--text-tertiary)] underline underline-offset-2 transition-colors hover:text-[var(--text-secondary)]"
       >
         Disconnect Spotify
       </button>

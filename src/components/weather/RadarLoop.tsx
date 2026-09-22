@@ -44,7 +44,7 @@ export function RadarLoop({ radarId }: { radarId: string }) {
 
   return (
     <div className="mx-auto max-w-md">
-      <div className="relative aspect-square overflow-hidden rounded-2xl border border-[var(--border)] bg-black/40">
+      <div className="relative aspect-square overflow-hidden rounded-[18px] border border-[var(--border)] bg-black/40">
         {/* eslint-disable-next-line @next/next/no-img-element -- external BOM imagery, not a local/optimizable asset */}
         <img src={data.background} alt="" className="absolute inset-0 h-full w-full object-cover" />
         {data.frames[frameIndex] && (
@@ -61,18 +61,16 @@ export function RadarLoop({ radarId }: { radarId: string }) {
         <img src={data.range} alt="" className="absolute inset-0 h-full w-full object-cover" />
       </div>
 
-      <div className="mt-2 flex items-center justify-center gap-3">
+      <div className="mt-3 flex items-center justify-center gap-3">
         <IconButton
           size="sm"
           onClick={() => setPlaying((p) => !p)}
           disabled={data.frames.length === 0}
           aria-label={playing ? "Pause radar loop" : "Play radar loop"}
         >
-          {playing ? <Pause size={13} /> : <Play size={13} />}
+          {playing ? <Pause size={13} strokeWidth={1.7} /> : <Play size={13} strokeWidth={1.7} />}
         </IconButton>
-        <span className="text-xs text-[var(--text-tertiary)]">
-          {data.warning ?? "Rain radar, last hour"}
-        </span>
+        <span className="instrument-label">{data.warning ?? "Rain radar, last hour"}</span>
       </div>
     </div>
   );

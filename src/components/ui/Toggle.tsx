@@ -23,18 +23,22 @@ export function Toggle({
       aria-label={ariaLabel}
       disabled={disabled}
       onClick={() => onChange(!on)}
-      whileTap={disabled ? undefined : { scale: 0.94 }}
+      whileTap={disabled ? undefined : { scale: 0.96 }}
       animate={{
-        borderColor: on ? accent : "var(--border-strong)",
-        backgroundColor: on ? `color-mix(in srgb, ${accent} 85%, transparent)` : "var(--surface)",
+        borderColor: on ? `color-mix(in srgb, ${accent} 45%, var(--border-strong))` : "var(--border)",
+        backgroundColor: on ? "var(--surface-2)" : "var(--surface)",
       }}
-      transition={{ duration: 0.2 }}
-      className="relative h-9 w-16 shrink-0 rounded-full border disabled:opacity-40"
+      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+      className="relative h-9 w-16 shrink-0 rounded-full border shadow-[inset_0_1px_0_var(--inset-highlight)] disabled:opacity-40"
     >
       <motion.span
-        className="absolute top-1 h-6 w-6 rounded-full bg-[#08090b] shadow"
-        animate={{ x: on ? 30 : 4 }}
-        transition={{ type: "spring", stiffness: 500, damping: 32 }}
+        className="absolute top-1 h-6 w-6 rounded-full"
+        animate={{
+          x: on ? 30 : 4,
+          backgroundColor: on ? accent : "var(--text-tertiary)",
+          boxShadow: on ? `0 0 10px -1px color-mix(in srgb, ${accent} 70%, transparent)` : "none",
+        }}
+        transition={{ type: "spring", stiffness: 440, damping: 38, mass: 0.65 }}
       />
     </motion.button>
   );

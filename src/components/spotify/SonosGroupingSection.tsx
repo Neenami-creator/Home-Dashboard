@@ -119,32 +119,30 @@ export function SonosGroupingSection() {
         <button
           type="button"
           onClick={startAuthFlow}
-          className="flex items-center gap-2 rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)] transition hover:bg-[var(--surface-hover)]"
+          className="flex items-center gap-2 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-[13px] text-[var(--text-secondary)] shadow-[inset_0_1px_0_var(--inset-highlight)] transition-colors hover:border-[var(--border-strong)]"
         >
-          <Users size={14} />
+          <Users size={14} strokeWidth={1.7} />
           Connect Sonos for multi-room grouping
         </button>
-        {error && <p className="text-xs text-red-400">{error}</p>}
+        {error && <p className="text-[12px] text-red-400">{error}</p>}
       </div>
     );
   }
 
   return (
     <div className="mt-10">
-      <h2 className="mb-3 text-center text-sm uppercase tracking-wide text-[var(--text-tertiary)]">
-        Sonos Groups
-      </h2>
+      <p className="instrument-label mb-3 text-center">Sonos Groups</p>
 
-      {error && <p className="mb-3 text-center text-xs text-red-400">{error}</p>}
+      {error && <p className="mb-3 text-center text-[12px] text-red-400">{error}</p>}
 
       <div className="space-y-3">
         {groups.map((group) => (
           <div
             key={group.id}
-            className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3"
+            className="flex items-center justify-between gap-3 rounded-[14px] border border-[var(--border)] bg-[var(--surface-2)] p-3 shadow-[inset_0_1px_0_var(--inset-highlight)]"
           >
-            <span className="flex items-center gap-2 text-sm">
-              <Speaker size={14} className="text-[var(--accent-spotify)]" />
+            <span className="flex items-center gap-2 text-[14px]">
+              <Speaker size={14} strokeWidth={1.7} className="text-[var(--accent-spotify)]" />
               {group.playerIds.map(playerName).join(" + ")}
             </span>
             <input
@@ -160,8 +158,8 @@ export function SonosGroupingSection() {
       </div>
 
       {selecting ? (
-        <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
-          <p className="mb-2 text-sm text-[var(--text-secondary)]">Select speakers to group:</p>
+        <div className="mt-4 rounded-[14px] border border-[var(--border)] bg-[var(--surface-2)] p-4 shadow-[inset_0_1px_0_var(--inset-highlight)]">
+          <p className="mb-2 text-[14px] text-[var(--text-secondary)]">Select speakers to group:</p>
           <div className="flex flex-wrap gap-2">
             {players.map((player) => {
               const isSelected = selectedPlayerIds.has(player.id);
@@ -177,10 +175,10 @@ export function SonosGroupingSection() {
                       return next;
                     })
                   }
-                  className="rounded-full border px-3 py-1.5 text-xs transition"
+                  className="rounded-[12px] border px-3 py-1.5 text-[12px] transition-colors"
                   style={
                     isSelected
-                      ? { borderColor: "var(--accent-spotify)", color: "var(--accent-spotify)" }
+                      ? { borderColor: "var(--border)", color: "var(--accent-spotify)", background: "var(--surface-hover)" }
                       : { borderColor: "var(--border)", color: "var(--text-secondary)" }
                   }
                 >
@@ -193,7 +191,7 @@ export function SonosGroupingSection() {
             <button
               type="button"
               onClick={() => setSelecting(false)}
-              className="flex-1 rounded-lg border border-[var(--border)] py-1.5 text-sm text-[var(--text-secondary)]"
+              className="flex-1 rounded-[12px] border border-[var(--border)] py-1.5 text-[14px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)]"
             >
               Cancel
             </button>
@@ -201,7 +199,8 @@ export function SonosGroupingSection() {
               type="button"
               disabled={selectedPlayerIds.size < 2 || busy}
               onClick={handleCreateGroup}
-              className="flex-1 rounded-lg bg-[var(--accent-spotify)] py-1.5 text-sm font-medium text-black disabled:opacity-50"
+              className="flex-1 rounded-[12px] py-1.5 text-[14px] font-medium text-black disabled:opacity-50"
+              style={{ background: "var(--accent-spotify)" }}
             >
               Group
             </button>
@@ -211,7 +210,7 @@ export function SonosGroupingSection() {
         <button
           type="button"
           onClick={() => setSelecting(true)}
-          className="mx-auto mt-4 block text-xs text-[var(--text-tertiary)] underline underline-offset-2"
+          className="mx-auto mt-4 block text-[12px] text-[var(--text-tertiary)] underline underline-offset-2 transition-colors hover:text-[var(--text-secondary)]"
         >
           + New group
         </button>
@@ -223,7 +222,7 @@ export function SonosGroupingSection() {
           clearTokens();
           setConnected(false);
         }}
-        className="mx-auto mt-6 block text-xs text-[var(--text-tertiary)] underline underline-offset-2"
+        className="mx-auto mt-6 block text-[12px] text-[var(--text-tertiary)] underline underline-offset-2 transition-colors hover:text-[var(--text-secondary)]"
       >
         Disconnect Sonos
       </button>

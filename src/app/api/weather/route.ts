@@ -112,18 +112,30 @@ export async function GET(request: NextRequest) {
     fetchBomJson(fcUrl),
   ]);
 
+  // The wall UI never shows raw BOM URLs or HTTP/parse error detail (see
+  // the Weather panel's failure state) - that detail is only useful for
+  // debugging, so it's logged server-side and the client only gets a
+  // generic, friendly message.
   if (obsResult.status === "fulfilled") {
     current = parseObservation(obsResult.value);
-    if (!current) warnings.push("Couldn't find current conditions in BOM's response.");
+    if (!current) {
+      console.error("Weather API: couldn't parse current conditions from BOM's response:", obsUrl);
+      warnings.push("Current conditions unavailable right now.");
+    }
   } else {
-    warnings.push(`Current conditions unavailable: ${obsResult.reason}`);
+    console.error("Weather API: current conditions request failed:", obsResult.reason);
+    warnings.push("Current conditions unavailable right now.");
   }
 
   if (fcResult.status === "fulfilled") {
     forecast = parseForecast(fcResult.value);
-    if (forecast.length === 0) warnings.push("Couldn't find a forecast in BOM's response.");
+    if (forecast.length === 0) {
+      console.error("Weather API: couldn't parse a forecast from BOM's response:", fcUrl);
+      warnings.push("Forecast unavailable right now.");
+    }
   } else {
-    warnings.push(`Forecast unavailable: ${fcResult.reason}`);
+    console.error("Weather API: forecast request failed:", fcResult.reason);
+    warnings.push("Forecast unavailable right now.");
   }
 
   const body: CityWeather = { current, forecast, warnings };
