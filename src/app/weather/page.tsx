@@ -92,7 +92,11 @@ export default function WeatherPage() {
   }
 
   return (
-    <PanelShell title="Weather" accent="var(--accent-weather)">
+    <PanelShell
+      title="Weather"
+      accent="var(--accent-weather)"
+      status={selectedCity ? (weather?.current ? selectedCity.name : "Offline") : undefined}
+    >
       <CitySelector
         cities={cities}
         selectedId={selectedId}
@@ -133,25 +137,22 @@ export default function WeatherPage() {
 
       {weather?.current && (
         <div
-          className="control-surface relative overflow-hidden p-10 sm:p-12"
+          className="control-surface overflow-hidden"
           style={{ "--accent": "var(--accent-weather)" } as CSSProperties}
           data-active
         >
-          <div
-            className="pointer-events-none absolute top-0 right-0 left-0 h-[400px]"
-            style={{
-              background: "radial-gradient(700px 400px at 50% 0%, rgba(87, 178, 255, 0.07), transparent 75%)",
-            }}
-          />
-          <div className="relative">
-            <ConditionsCard
-              current={weather.current}
-              cityName={selectedCity?.name ?? ""}
-              today={weather.forecast[0]}
-            />
-            <div className="mt-8 border-t border-[var(--border)] pt-6">
-              <ForecastStrip forecast={weather.forecast} />
+          <div className="grid sm:grid-cols-[1fr_280px]">
+            <div className="p-10 sm:p-12">
+              <ConditionsCard
+                current={weather.current}
+                cityName={selectedCity?.name ?? ""}
+                today={weather.forecast[0]}
+              />
             </div>
+            <div className="media-tonal hidden min-h-[220px] sm:block" />
+          </div>
+          <div className="border-t border-[var(--border)] p-8 sm:p-10">
+            <ForecastStrip forecast={weather.forecast} />
           </div>
         </div>
       )}

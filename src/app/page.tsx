@@ -115,7 +115,6 @@ const tileVariants = {
 
 function PanelTile({ panel }: { panel: (typeof PANELS)[number] }) {
   const liveStatus = useLiveStatus(panel.href);
-  const Icon = panel.icon;
   const [justRanAction, setJustRanAction] = useState(false);
   const quickAction = QUICK_ACTIONS[panel.href];
 
@@ -144,56 +143,71 @@ function PanelTile({ panel }: { panel: (typeof PANELS)[number] }) {
         }}
         data-active={isActive}
         style={{ "--accent": panel.accent } as CSSProperties}
-        className="control-surface flex h-full min-h-0 flex-col justify-between p-[26px]"
+        className="control-surface flex h-full min-h-0 flex-col overflow-hidden"
       >
-        <div className="flex items-start justify-between">
-          <span className="instrument-label">{panel.label}</span>
+        <div className="flex items-start justify-between p-5 pb-4">
+          <div className="min-w-0">
+            <span className="font-display block text-[21px] font-normal uppercase tracking-wide">
+              {panel.label}
+            </span>
+            <span className="mt-1 flex items-center gap-1.5 truncate text-[14px] text-[var(--text-secondary)]">
+              {justRanAction && <Check size={13} className="shrink-0" style={{ color: panel.accent }} />}
+              {justRanAction ? QUICK_ACTION_LABELS[panel.href] : (liveStatus ?? panel.description)}
+            </span>
+          </div>
           <span
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-[var(--border)] bg-[var(--surface-2)] shadow-[inset_0_1px_0_var(--inset-highlight)] transition-colors"
-            style={{ color: isActive ? panel.accent : "var(--text-tertiary)" }}
-          >
-            <Icon size={21} strokeWidth={1.6} />
-          </span>
+            className="mt-1.5 h-2 w-2 shrink-0 rounded-full"
+            style={{ backgroundColor: isActive ? panel.accent : "var(--border-strong)" }}
+          />
         </div>
-
-        <div>
-          <span className="font-display block text-[25px] font-normal leading-tight">{panel.name}</span>
-          <span className="mt-1.5 flex items-center gap-1.5 truncate text-[14px] text-[var(--text-secondary)]">
-            {justRanAction && <Check size={13} className="shrink-0" style={{ color: panel.accent }} />}
-            {justRanAction ? QUICK_ACTION_LABELS[panel.href] : (liveStatus ?? panel.description)}
-          </span>
-          <span className="precision-line mt-3" style={{ backgroundColor: panel.accent }} />
-        </div>
+        <div className="media-tonal min-h-0 flex-1" style={{ "--accent": panel.accent } as CSSProperties} />
       </Link>
     </motion.div>
+  );
+}
+
+function HomeWeatherSummary() {
+  const status = useLiveStatus("/weather");
+  if (!status) return null;
+  const [temp, ...rest] = status.split(" ");
+  return (
+    <div>
+      <p className="font-display text-[32px] font-normal leading-tight">{temp}</p>
+      <p className="mt-0.5 text-[15px] text-[var(--text-secondary)]">{rest.join(" ")}</p>
+    </div>
   );
 }
 
 export default function Home() {
   return (
     <div className="flex h-screen flex-col overflow-hidden px-8 py-7">
-      <div className="flex flex-col items-center gap-2">
-        <p className="instrument-label">Home</p>
-        <Clock
-          className="[&_p:first-child]:font-display [&_p:first-child]:text-center [&_p:first-child]:text-[76px] [&_p:first-child]:font-normal [&_p:first-child]:leading-[0.9] [&_p:first-child]:tracking-[-0.035em]
-            [&_p:last-child]:mt-2 [&_p:last-child]:text-center [&_p:last-child]:text-[13px] [&_p:last-child]:tracking-[0.06em] [&_p:last-child]:text-[var(--text-tertiary)]"
-        />
-      </div>
-
-      <div className="flex justify-center py-6">
+      <div className="flex justify-center pb-6">
         <RoutineBar />
       </div>
 
-      <motion.div
-        variants={gridVariants}
-        initial="hidden"
-        animate="visible"
-        className="grid min-h-0 flex-1 grid-cols-2 grid-rows-[repeat(2,minmax(0,1fr))] gap-4"
-      >
-        {PANELS.map((panel) => (
-          <PanelTile key={panel.href} panel={panel} />
-        ))}
-      </motion.div>
+      <div className="flex min-h-0 flex-1 gap-8">
+        <div className="flex w-[300px] shrink-0 flex-col justify-between">
+          <div>
+            <p className="instrument-label">Home</p>
+            <Clock
+              className="mt-3 [&_p:first-child]:font-display [&_p:first-child]:text-left [&_p:first-child]:text-[76px] [&_p:first-child]:font-normal [&_p:first-child]:leading-[0.9] [&_p:first-child]:tracking-[-0.035em]
+                [&_p:last-child]:mt-2 [&_p:last-child]:text-left [&_p:last-child]:text-[13px] [&_p:last-child]:tracking-[0.06em] [&_p:last-child]:text-[var(--text-tertiary)]"
+            />
+          </div>
+          <HomeWeatherSummary />
+        </div>
+
+        <motion.div
+          variants={gridVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid min-h-0 flex-1 grid-cols-2 grid-rows-[repeat(2,minmax(0,1fr))] gap-4"
+        >
+          {PANELS.map((panel) => (
+            <PanelTile key={panel.href} panel={panel} />
+          ))}
+        </motion.div>
+      </div>
     </div>
   );
 }

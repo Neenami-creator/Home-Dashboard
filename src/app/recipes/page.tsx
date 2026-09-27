@@ -23,7 +23,11 @@ export default function RecipesPage() {
   const visible = recipes ? searchRecipes(recipes, query) : [];
 
   return (
-    <PanelShell title="Recipes" accent="var(--accent-recipes)">
+    <PanelShell
+      title="Recipes"
+      accent="var(--accent-recipes)"
+      status={recipes ? `${recipes.length} recipe${recipes.length === 1 ? "" : "s"}` : undefined}
+    >
       <div className="mb-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
         <div className="relative w-full sm:w-[380px]">
           <Search

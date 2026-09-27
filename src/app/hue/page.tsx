@@ -5,6 +5,8 @@ import { motion } from "motion/react";
 import { PanelShell } from "@/components/PanelShell";
 import { BridgeSettings } from "@/components/hue/BridgeSettings";
 import { RoomTile } from "@/components/hue/RoomTile";
+import { BrightnessPanel } from "@/components/hue/BrightnessPanel";
+import { SceneCard } from "@/components/hue/SceneCard";
 import { StaleBadge } from "@/components/ui/StaleBadge";
 import { loadBridgeConfig, saveBridgeConfig, clearBridgeConfig } from "@/lib/hue/config";
 import {
@@ -37,6 +39,8 @@ export default function HuePage() {
   const [config, setConfig] = useState<BridgeConfig | null | undefined>(undefined);
   const [rooms, setRooms] = useState<HueRoomState[]>([]);
   const [scenes, setScenes] = useState<HueScene[]>([]);
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [activeSceneId, setActiveSceneId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busyRoomId, setBusyRoomId] = useState<string | null>(null);
   const [live, setLive] = useState(false);
@@ -100,6 +104,12 @@ export default function HuePage() {
     return unsubscribe;
   }, [config]);
 
+  useEffect(() => {
+    if (selectedRoomId || rooms.length === 0) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedRoomId(rooms[0].id);
+  }, [rooms, selectedRoomId]);
+
   async function applyUpdate(
     room: HueRoomState,
     update: Parameters<typeof setGroupedLightState>[2]
@@ -129,6 +139,7 @@ export default function HuePage() {
     setBusyRoomId(room.id);
     try {
       await recallScene(config, sceneId);
+      setActiveSceneId(sceneId);
       // Scenes change on/brightness/color together; the event stream will
       // pick up the resulting grouped_light change, but nudge a refresh in
       // case that's slow to arrive.
@@ -142,7 +153,7 @@ export default function HuePage() {
 
   if (config === undefined) {
     return (
-      <PanelShell title="Hue Lights" accent="var(--accent-hue)">
+      <PanelShell title="Lighting" accent="var(--accent-hue)">
         <p className="text-[var(--text-secondary)]">Loading…</p>
       </PanelShell>
     );
@@ -150,7 +161,7 @@ export default function HuePage() {
 
   if (!config) {
     return (
-      <PanelShell title="Hue Lights" accent="var(--accent-hue)">
+      <PanelShell title="Lighting" accent="var(--accent-hue)">
         <BridgeSettings initial={null} onSave={(cfg) => {
           saveBridgeConfig(cfg);
           setConfig(cfg);
@@ -159,8 +170,16 @@ export default function HuePage() {
     );
   }
 
+  const onCount = rooms.filter((r) => r.on).length;
+  const selectedRoom = rooms.find((r) => r.id === selectedRoomId);
+  const roomScenes = selectedRoomId ? scenes.filter((s) => s.roomId === selectedRoomId) : [];
+
   return (
-    <PanelShell title="Hue Lights" accent="var(--accent-hue)">
+    <PanelShell
+      title="Lighting"
+      accent="var(--accent-hue)"
+      status={rooms.length > 0 ? `${onCount} of ${rooms.length} lights on` : undefined}
+    >
       {staleSince !== null && (
         <div className="mb-4 flex justify-center">
           <StaleBadge savedAt={staleSince} />
@@ -178,26 +197,55 @@ export default function HuePage() {
         <p className="text-[var(--text-secondary)]">Looking for rooms on the bridge…</p>
       )}
 
-      <motion.div
-        variants={gridVariants}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {rooms.map((room) => (
-          <motion.div key={room.id} variants={tileVariants}>
-            <RoomTile
-              room={room}
-              scenes={scenes.filter((s) => s.roomId === room.id)}
-              busy={busyRoomId === room.id}
-              onToggle={(on) => applyUpdate(room, { on })}
-              onBrightness={(brightness) => applyUpdate(room, { brightness })}
-              onColor={(xy) => applyUpdate(room, { xy })}
-              onScene={(sceneId) => applyScene(room, sceneId)}
-            />
+      {rooms.length > 0 && (
+        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+          <motion.div
+            variants={gridVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+          >
+            {rooms.map((room) => (
+              <motion.div key={room.id} variants={tileVariants}>
+                <RoomTile
+                  room={room}
+                  selected={room.id === selectedRoomId}
+                  onSelect={() => {
+                    setSelectedRoomId(room.id);
+                    setActiveSceneId(null);
+                  }}
+                  onToggle={(on) => applyUpdate(room, { on })}
+                  busy={busyRoomId === room.id}
+                />
+              </motion.div>
+            ))}
           </motion.div>
-        ))}
-      </motion.div>
+
+          <BrightnessPanel
+            room={selectedRoom}
+            busy={busyRoomId === selectedRoom?.id}
+            onBrightness={(brightness) => selectedRoom && applyUpdate(selectedRoom, { brightness })}
+            onColor={(xy) => selectedRoom && applyUpdate(selectedRoom, { xy })}
+          />
+        </div>
+      )}
+
+      {roomScenes.length > 0 && (
+        <div className="mt-8">
+          <p className="instrument-label mb-3">Scenes</p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {roomScenes.map((scene) => (
+              <SceneCard
+                key={scene.id}
+                scene={scene}
+                selected={activeSceneId === scene.id}
+                busy={busyRoomId === selectedRoomId}
+                onSelect={() => selectedRoom && applyScene(selectedRoom, scene.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-8 flex items-center justify-between">
         <span className="instrument-label flex items-center gap-1.5">

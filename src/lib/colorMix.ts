@@ -6,12 +6,12 @@
 // references against a small static table mirroring globals.css, since
 // these run before paint and can't rely on getComputedStyle being ready.
 const TOKEN_COLORS: Record<string, string> = {
-  "--accent-hue": "#f5c94a",
-  "--accent-spotify": "#2fe272",
-  "--accent-weather": "#57b2ff",
-  "--accent-recipes": "#ff9166",
-  "--border": "rgba(255, 255, 255, 0.065)",
-  "--border-strong": "rgba(255, 255, 255, 0.11)",
+  "--accent-hue": "#b99a62",
+  "--accent-spotify": "#93aa95",
+  "--accent-weather": "#829bad",
+  "--accent-recipes": "#b88268",
+  "--border": "rgba(236, 232, 222, 0.08)",
+  "--border-strong": "rgba(236, 232, 222, 0.16)",
 };
 
 type Rgba = { r: number; g: number; b: number; a: number };

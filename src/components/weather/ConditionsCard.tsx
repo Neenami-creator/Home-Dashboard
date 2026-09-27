@@ -16,13 +16,13 @@ export function ConditionsCard({
   const Icon = weatherIcon(current.conditionText);
 
   return (
-    <div className="relative flex flex-col items-center gap-2 text-center">
+    <div className="relative flex flex-col items-start gap-2 text-left">
       <p className="instrument-label">{cityName}</p>
       <p className="font-display mt-2 text-[88px] leading-[0.95] font-normal tracking-[-0.03em]">
         {current.airTempC !== null ? `${Math.round(current.airTempC)}°` : "—"}
       </p>
 
-      <div className="mt-1 flex items-center justify-center gap-2.5">
+      <div className="mt-1 flex items-center gap-2.5">
         {/* eslint-disable-next-line react-hooks/static-components -- Icon selects among fixed Lucide components, not defined during render */}
         <Icon size={30} strokeWidth={1.5} className="text-[var(--accent-weather)]" />
         <span className="text-[17px] text-[var(--text-secondary)]">
@@ -30,7 +30,7 @@ export function ConditionsCard({
         </span>
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[14px] text-[var(--text-secondary)]">
+      <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[14px] text-[var(--text-secondary)]">
         {current.feelsLikeC !== null && <span>Feels like {Math.round(current.feelsLikeC)}°</span>}
         {today && (today.maxTempC !== null || today.minTempC !== null) && (
           <span>
@@ -40,7 +40,7 @@ export function ConditionsCard({
         )}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5 text-[13px] text-[var(--text-tertiary)]">
+      <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1.5 text-[13px] text-[var(--text-tertiary)]">
         {current.humidityPercent !== null && (
           <span className="flex items-center gap-1.5">
             <Droplets size={13} strokeWidth={1.7} />

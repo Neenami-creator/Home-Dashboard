@@ -27,18 +27,20 @@ export function IconButton({
 }: {
   children: ReactNode;
   size?: Size;
-  variant?: "ghost" | "solid";
+  variant?: "ghost" | "solid" | "ring";
   accent?: string;
 } & HTMLMotionProps<"button">) {
   const base = "flex items-center justify-center rounded-full disabled:opacity-40 disabled:pointer-events-none";
   const style =
     variant === "solid"
-      ? { backgroundColor: accent ?? "var(--foreground)", color: "#08090b" }
-      : {
-          borderWidth: 1,
-          borderColor: "var(--border)",
-          color: "var(--foreground)",
-        };
+      ? { backgroundColor: accent ?? "var(--foreground)", color: "var(--background)" }
+      : variant === "ring"
+        ? { borderWidth: 1.5, borderColor: accent ?? "var(--border-strong)", color: accent ?? "var(--foreground)" }
+        : {
+            borderWidth: 1,
+            borderColor: "var(--border)",
+            color: "var(--foreground)",
+          };
 
   return (
     <motion.button
@@ -47,7 +49,7 @@ export function IconButton({
       whileTap={disabled ? undefined : { scale: 0.9 }}
       whileHover={disabled ? undefined : { scale: 1.05 }}
       transition={{ type: "spring", stiffness: 500, damping: 30 }}
-      className={`${base} ${SIZES[size]} ${variant === "ghost" ? "hover:bg-[var(--surface-hover)]" : "hover:brightness-110"} ${className}`}
+      className={`${base} ${SIZES[size]} ${variant === "solid" ? "hover:brightness-110" : "hover:bg-[var(--surface-hover)]"} ${className}`}
       style={style}
       {...props}
     >

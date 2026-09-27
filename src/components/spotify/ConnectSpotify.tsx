@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { startAuthFlow } from "@/lib/spotify/auth";
 import { saveClientId } from "@/lib/spotify/config";
-import { mixWithTransparent } from "@/lib/colorMix";
 
 export function ConnectSpotify({ initialClientId }: { initialClientId: string | null }) {
   const [clientId, setClientId] = useState(initialClientId ?? "");
@@ -46,11 +45,8 @@ export function ConnectSpotify({ initialClientId }: { initialClientId: string | 
         <button
           type="submit"
           disabled={connecting}
-          className="mt-1 h-[52px] rounded-[13px] text-[16px] font-medium text-black transition disabled:opacity-50"
-          style={{
-            background: "var(--accent-spotify)",
-            boxShadow: `0 0 24px -6px ${mixWithTransparent("var(--accent-spotify)", 55)}`,
-          }}
+          className="mt-1 h-[52px] rounded-[13px] text-[16px] font-medium transition disabled:opacity-50"
+          style={{ background: "var(--accent-spotify)", color: "var(--background)" }}
         >
           {connecting ? "Redirecting…" : "Connect with Spotify"}
         </button>
