@@ -199,8 +199,8 @@ export function SonosGroupingSection() {
               type="button"
               disabled={selectedPlayerIds.size < 2 || busy}
               onClick={handleCreateGroup}
-              className="flex-1 rounded-[12px] py-1.5 text-[14px] font-medium text-black disabled:opacity-50"
-              style={{ background: "var(--accent-spotify)" }}
+              className="flex-1 rounded-[12px] py-1.5 text-[14px] font-medium disabled:opacity-50"
+              style={{ background: "var(--accent-spotify)", color: "var(--background)" }}
             >
               Group
             </button>

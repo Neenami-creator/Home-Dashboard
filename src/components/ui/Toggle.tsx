@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { mixColors, mixWithTransparent } from "@/lib/colorMix";
+import { mixColors } from "@/lib/colorMix";
 
 export function Toggle({
   on,
@@ -37,7 +37,6 @@ export function Toggle({
         animate={{
           x: on ? 30 : 4,
           backgroundColor: on ? accent : "var(--text-tertiary)",
-          boxShadow: on ? `0 0 10px -1px ${mixWithTransparent(accent, 70)}` : "none",
         }}
         transition={{ type: "spring", stiffness: 440, damping: 38, mass: 0.65 }}
       />

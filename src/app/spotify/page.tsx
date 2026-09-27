@@ -125,7 +125,7 @@ export default function SpotifyPage() {
 
   if (clientId === undefined) {
     return (
-      <PanelShell title="Spotify" accent="var(--accent-spotify)">
+      <PanelShell title="Audio" accent="var(--accent-spotify)">
         <p className="text-[var(--text-secondary)]">Loading…</p>
       </PanelShell>
     );
@@ -133,14 +133,18 @@ export default function SpotifyPage() {
 
   if (!connected) {
     return (
-      <PanelShell title="Spotify" accent="var(--accent-spotify)">
+      <PanelShell title="Audio" accent="var(--accent-spotify)">
         <ConnectSpotify initialClientId={clientId} />
       </PanelShell>
     );
   }
 
   return (
-    <PanelShell title="Spotify" accent="var(--accent-spotify)">
+    <PanelShell
+      title="Audio"
+      accent="var(--accent-spotify)"
+      status={playback?.device ? `Playing in ${playback.device.name}` : undefined}
+    >
       {staleSince !== null && (
         <div className="mb-4 flex justify-center">
           <StaleBadge savedAt={staleSince} />

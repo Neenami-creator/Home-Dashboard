@@ -61,22 +61,6 @@ export function NowPlayingCard({
       style={{ "--accent": accent } as CSSProperties}
       className="control-surface relative mx-auto flex max-w-3xl flex-col items-center gap-6 p-8 sm:flex-row sm:items-center sm:gap-8"
     >
-      {/* Blurred, low-opacity copy of the current artwork as an ambient
-          backdrop - the "album art carries the color" treatment, kept
-          restrained so it reads as atmosphere rather than a busy background. */}
-      {artwork && (
-        <div
-          className="pointer-events-none absolute top-0 right-0 bottom-0 left-0 overflow-hidden opacity-[0.08]"
-          style={{
-            backgroundImage: `url(${artwork})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            filter: "blur(90px)",
-            transform: "scale(1.3)",
-          }}
-        />
-      )}
-
       <AnimatePresence mode="wait">
         {artwork ? (
           <motion.div
@@ -114,7 +98,7 @@ export function NowPlayingCard({
             className="text-center sm:text-left"
           >
             <p className="instrument-label">Now Playing</p>
-            <p className="font-display mt-1.5 text-[28px] leading-tight font-normal sm:text-[32px]">
+            <p className="font-display mt-1.5 text-[32px] leading-tight font-normal sm:text-[40px]">
               {track?.name ?? "Nothing playing"}
             </p>
             <p className="mt-1 text-[16px] text-[var(--text-secondary)]">
@@ -159,7 +143,7 @@ export function NowPlayingCard({
             onClick={onPlayPause}
             disabled={busy}
             size="play"
-            variant="solid"
+            variant="ring"
             accent={accent}
             aria-label={state.is_playing ? "Pause" : "Play"}
           >

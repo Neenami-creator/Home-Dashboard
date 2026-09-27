@@ -1,32 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --background: #08090b;
-  --foreground: #f4f3ef;
+  /* Architectural Console: a crafted, cabinetry-like material - matte
+     charcoal, warm ivory type, restrained brass hardware - rather than a
+     glowing "glass panel" dashboard. Canvas and surfaces are literal
+     solid colours (not a white wash over black), so cards read as
+     opaque, built material. */
+  --background: #111311;
+  --foreground: #ece8de;
 
   --bg: var(--background);
-  --bg-elevated: #0c0e11;
+  --bg-elevated: #1c211d;
 
-  /* Quiet Luxury / Luminous Instrument: surfaces read as smoked, low-
-     reflectivity material rather than glass panels, so these sit much
-     closer to the background than a typical "frosted card" dashboard. */
-  --surface: rgba(255, 255, 255, 0.025);
-  --surface-hover: rgba(255, 255, 255, 0.055);
+  --surface: #1c211d;
+  --surface-hover: #232921;
   --surface-1: var(--surface);
-  --surface-2: rgba(255, 255, 255, 0.04);
+  --surface-2: #171b18;
+  --surface-inset: #151a17;
 
-  --border: rgba(255, 255, 255, 0.065);
-  --border-strong: rgba(255, 255, 255, 0.11);
-  --inset-highlight: rgba(255, 255, 255, 0.045);
+  --border: rgba(236, 232, 222, 0.08);
+  --border-strong: rgba(236, 232, 222, 0.16);
+  --inset-highlight: rgba(236, 232, 222, 0.05);
 
   --text-primary: var(--foreground);
-  --text-secondary: #a5a7ac;
-  --text-tertiary: #70737a;
+  --text-secondary: #b6b8ae;
+  --text-tertiary: #82857b;
 
-  --accent-hue: #f5c94a;
-  --accent-spotify: #2fe272;
-  --accent-weather: #57b2ff;
-  --accent-recipes: #ff9166;
+  --accent-hue: #b99a62;
+  --accent-spotify: #93aa95;
+  --accent-weather: #829bad;
+  --accent-recipes: #b88268;
   --hue: var(--accent-hue);
   --spotify: var(--accent-spotify);
   --weather: var(--accent-weather);
@@ -37,9 +40,9 @@
      like a room that changes with the day (see components/TimeOfDayTheme).
      These defaults match "day"; kept deliberately faint so the surface
      reads as ambient light rather than a coloured background. */
-  --ambient-glow-1: rgba(125, 160, 174, 0.03);
-  --ambient-glow-2: rgba(125, 160, 174, 0.025);
-  --ambient-glow-3: rgba(47, 226, 114, 0.02);
+  --ambient-glow-1: rgba(185, 154, 98, 0.025);
+  --ambient-glow-2: rgba(185, 154, 98, 0.018);
+  --ambient-glow-3: rgba(130, 155, 173, 0.018);
 }
 
 @theme inline {
@@ -61,10 +64,10 @@ body {
 body {
   min-height: 100vh;
   background-image:
-    radial-gradient(900px 620px at 50% -10%, rgba(255, 255, 255, 0.035), transparent 70%),
+    radial-gradient(900px 620px at 50% -10%, rgba(236, 232, 222, 0.02), transparent 70%),
     radial-gradient(700px 500px at 78% 28%, var(--ambient-glow-1), transparent 75%),
     radial-gradient(1100px 680px at 18% 118%, var(--ambient-glow-3), transparent 70%);
-  background-color: #070809;
+  background-color: var(--background);
   background-attachment: fixed;
   transition: background-color 6s ease;
 }
@@ -125,23 +128,20 @@ textarea {
   color: var(--text-tertiary);
 }
 
-/* The dashboard's one shared "material": smoked, low-reflectivity black
-   with a faint inset highlight rather than a glass card. Every control
-   surface (Home tiles, and later Hue/Spotify/Weather/Recipes panels)
-   should reach for this instead of a flat bg-[var(--surface)] block. */
+/* The dashboard's one shared "material": matte, opaque cabinetry rather
+   than a glass or glow card. Every control surface (Home tiles, Hue,
+   Spotify, Weather, Recipes panels) should reach for this instead of a
+   flat bg-[var(--surface)] block. Selection/active state is a thin brass
+   (or module-accent) outline, never a colour-glow blob or drop shadow. */
 .control-surface {
   position: relative;
   overflow: hidden;
-  border-radius: 22px;
+  border-radius: 16px;
   border: 1px solid var(--border);
-  background: linear-gradient(150deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.012) 55%, rgba(255, 255, 255, 0.022));
-  box-shadow:
-    inset 0 1px 0 var(--inset-highlight),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-    0 18px 40px rgba(0, 0, 0, 0.14);
+  background: var(--surface);
+  box-shadow: inset 0 1px 0 var(--inset-highlight);
   transition:
     border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -153,25 +153,38 @@ textarea {
   transform: scale(0.985);
 }
 
-/* The accent is a light source embedded in the material, not a colour
-   fill - see --accent set per-instance and data-active for "in use". */
-.control-surface::before {
-  content: "";
-  position: absolute;
-  width: 240px;
-  height: 240px;
-  right: -100px;
-  top: -120px;
-  border-radius: 50%;
-  background: var(--accent, transparent);
-  opacity: var(--bloom-opacity, 0.07);
-  filter: blur(70px);
-  pointer-events: none;
-  transition: opacity 400ms ease;
+.control-surface[data-active="true"] {
+  border-color: var(--accent, var(--border-strong));
 }
 
-.control-surface[data-active="true"]::before {
-  opacity: var(--bloom-opacity, 0.14);
+/* A recessed, dark tonal panel standing in for photography - used for the
+   room/scene/weather media regions the design spec calls for, without any
+   licensed photo assets. Deliberately just tone and a soft glint, not a
+   picture; kept static (no shimmer/parallax) per the spec's "sparse
+   motion" rule. */
+.media-tonal {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 140% at 15% -10%, color-mix(in srgb, var(--accent, var(--text-tertiary)) 16%, transparent), transparent 60%),
+    var(--surface-inset);
+}
+
+.media-tonal::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.35));
+  pointer-events: none;
+}
+
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .media-tonal {
+    background: var(--surface-inset);
+  }
 }
 
 /* The recurring "precision line" signature: a short low-opacity accent
@@ -200,8 +213,8 @@ textarea {
 }
 
 .hue-input:focus {
-  border-color: rgba(245, 201, 74, 0.55);
-  box-shadow: 0 0 0 3px rgba(245, 201, 74, 0.08);
+  border-color: rgba(185, 154, 98, 0.55);
+  box-shadow: 0 0 0 3px rgba(185, 154, 98, 0.1);
 }
 
 .spotify-input {
@@ -216,8 +229,8 @@ textarea {
 }
 
 .spotify-input:focus {
-  border-color: rgba(47, 226, 114, 0.5);
-  box-shadow: 0 0 0 3px rgba(47, 226, 114, 0.08);
+  border-color: rgba(147, 170, 149, 0.55);
+  box-shadow: 0 0 0 3px rgba(147, 170, 149, 0.1);
 }
 
 .weather-input {
@@ -232,8 +245,8 @@ textarea {
 }
 
 .weather-input:focus {
-  border-color: rgba(87, 178, 255, 0.5);
-  box-shadow: 0 0 0 3px rgba(87, 178, 255, 0.08);
+  border-color: rgba(130, 155, 173, 0.55);
+  box-shadow: 0 0 0 3px rgba(130, 155, 173, 0.1);
 }
 
 .recipes-input {
@@ -248,8 +261,8 @@ textarea {
 }
 
 .recipes-input:focus {
-  border-color: rgba(255, 145, 102, 0.5);
-  box-shadow: 0 0 0 3px rgba(255, 145, 102, 0.08);
+  border-color: rgba(184, 130, 104, 0.55);
+  box-shadow: 0 0 0 3px rgba(184, 130, 104, 0.1);
 }
 
 /* Recipe-card skeleton shimmer while the library loads - extremely low

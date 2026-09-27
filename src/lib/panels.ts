@@ -13,7 +13,7 @@ export type PanelDef = {
 export const PANELS: PanelDef[] = [
   {
     href: "/hue",
-    name: "Hue Lights",
+    name: "Lighting",
     label: "Lighting",
     description: "Room-by-room light control",
     accent: "var(--accent-hue)",
@@ -21,7 +21,7 @@ export const PANELS: PanelDef[] = [
   },
   {
     href: "/spotify",
-    name: "Spotify",
+    name: "Audio",
     label: "Audio",
     description: "Sonos playback control",
     accent: "var(--accent-spotify)",
@@ -30,7 +30,7 @@ export const PANELS: PanelDef[] = [
   {
     href: "/weather",
     name: "Weather",
-    label: "Conditions",
+    label: "Weather",
     description: "BOM current conditions & forecast",
     accent: "var(--accent-weather)",
     icon: CloudSun,
@@ -38,7 +38,7 @@ export const PANELS: PanelDef[] = [
   {
     href: "/recipes",
     name: "Recipes",
-    label: "Library",
+    label: "Recipes",
     description: "The recipe library",
     accent: "var(--accent-recipes)",
     icon: ChefHat,
